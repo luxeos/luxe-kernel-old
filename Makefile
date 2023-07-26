@@ -99,4 +99,4 @@ clean:
 distclean:
 	@printf " DISTCLEAN\n"
 	@rm -rf $(BUILD_DIR) $(RELEASE_DIR)
-	@rm -rf Makefile.in .config ex/*
+	@rm -rf Makefile.in .config
