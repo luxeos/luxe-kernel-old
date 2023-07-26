@@ -2,5 +2,5 @@
 build/
 release/
 
-Makefile
+Makefile.in
 .config
