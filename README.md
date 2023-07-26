@@ -12,6 +12,6 @@ To run Luxe in QEMU, run `make run`.
 
 ## License
 
-![CC BY-ND 4.)](https://upload.wikimedia.org/wikipedia/commons/f/f0/CC_BY-ND.svg)
+<img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/CC_BY-ND.svg" width="229" height="80">
 
 This project is licensed under the CC BY-ND 4.0 license, which you can find [here](LICENSE.md).
