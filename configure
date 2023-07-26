@@ -14,7 +14,24 @@ function make_write {
 	printf "%s\n" "$@" >> Makefile
 }
 
-## TODO: Check if the required programs for building are present
+function check_command_fail {
+	printf "not found.\n"
+	exit 1
+}
+
+function check_command {
+	printf "Checking for $1... "
+	command -v $1 || check_command_fail
+}
+
+check_command x86_64-elf-gcc
+check_command x86_64-elf-ld
+check_command x86_64-elf-objcopy
+check_command nasm
+check_command xorriso
+check_command qemu-system-x86_64
+check_command python3
+
 ## TODO: Allow to configure custom build and release directories
 
 # Download submodules
