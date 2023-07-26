@@ -1,0 +1,7 @@
+.vscode/
+ex/
+build/
+release/
+
+Makefile
+.config

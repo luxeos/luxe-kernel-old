@@ -1,0 +1,16 @@
+mainmenu "LuxeOS Configuration"
+
+config ARCH
+	string "Target Architecture"
+	default "x86_64"
+	---help---
+	Build target architecture.
+	Valid targets: x86_64
+
+menu "Debug"
+	config DEBUG
+		bool "Enable Debug mode"
+		default y
+		---help---
+		Enables debugging support.
+endmenu
