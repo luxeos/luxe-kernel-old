@@ -30,6 +30,7 @@ run: release_iso
 
 .config:
 	@ex/kconfiglib/alldefconfig.py
+	@$(MAKE) krnl/config.h
 
 krnl/config.h: Kconfig .config
 	@ex/kconfiglib/genconfig.py --header-path krnl/config.h
@@ -37,10 +38,12 @@ krnl/config.h: Kconfig .config
 .PHONY: menuconfig
 menuconfig:
 	@ex/kconfiglib/menuconfig.py
+	@$(MAKE) krnl/config.h
 
 .PHONY: guiconfig
 guiconfig:
 	@ex/kconfiglib/guiconfig.py
+	@$(MAKE) krnl/config.h
 
 $(RELEASE_ISO): $(KERNEL)
 	@printf " GEN  $(notdir $(RELEASE_ISO))\n"
@@ -78,7 +81,7 @@ $(RELEASE_HDD): $(KERNEL)
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	@printf " CC   $^\n"
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.o: %.asm
 	@mkdir -p $(dir $@)
@@ -88,7 +91,7 @@ $(BUILD_DIR)/%.o: %.asm
 $(KERNEL): $(OBJ)
 	@mkdir -p $(dir $@)
 	@printf " LD   $@\n"
-	@$(LD) $(OBJ) $(LDFLAGS) -o $@
+	$(LD) $(OBJ) $(LDFLAGS) -o $@
 
 .PHONY: clean
 clean:

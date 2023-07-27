@@ -5,7 +5,7 @@ config ARCH
 	default "x86_64"
 	---help---
 	Build target architecture.
-	Valid targets: x86_64
+	Valid targets: x86_64, aarch64
 
 menu "Debug"
 	config DEBUG

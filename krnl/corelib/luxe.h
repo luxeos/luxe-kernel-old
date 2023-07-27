@@ -11,7 +11,12 @@
 #ifndef __LUXE_H_
 #define __LUXE_H_
 
-#include <luxe/luxe_asm.h>
+#include <config.h>
+
+#if CONFIG_ARCH == x86_64
+#include <luxe/x86_64/luxe_asm.h>
+#endif
+
 #include <luxe/luxe_status.h>
 
 #endif /* __LUXE_H_ */
