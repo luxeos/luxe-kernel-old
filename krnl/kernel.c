@@ -9,14 +9,14 @@
  */
 
 #include <boot/boot.h>
-#include <dd/serial/serial.h>
+#include <dd/uart/uart.h>
 
 #include <luxe.h>
 
 void kernel_init(void)
 {
-	serial_init();
-	serial_write("Welcome to LuxeOS");
+	uart_init();
+	uart_write("Welcome to LuxeOS");
 
 	for (;;);
 }

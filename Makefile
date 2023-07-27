@@ -49,10 +49,9 @@ $(RELEASE_ISO): $(KERNEL)
 	@printf " GEN  $(notdir $(RELEASE_ISO))\n"
 	@mkdir -p $(RELEASE_DIR)
 	@mkdir -p iso_tmp/EFI/BOOT
-	@cp $(KERNEL) aux/limine.cfg ex/limine/limine-bios.sys ex/limine/limine-bios-cd.bin ex/limine/limine-uefi-cd.bin iso_tmp/
-	@cp ex/limine/BOOTX64.EFI iso_tmp/EFI/BOOT/
-	@xorriso -as mkisofs -b limine-bios-cd.bin -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot limine-uefi-cd.bin -efi-boot-part --efi-boot-image --protective-msdos-label iso_tmp -o $(RELEASE_ISO) &>/dev/null
-	@ex/limine/limine bios-install $(RELEASE_ISO) &>/dev/null
+	@cp $(KERNEL) aux/limine.cfg ex/limine/limine-uefi-cd.bin iso_tmp/
+	@cp ex/limine/$(EFI_BOOTFILE) iso_tmp/EFI/BOOT/
+	@xorriso -as mkisofs -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot limine-uefi-cd.bin -efi-boot-part --efi-boot-image --protective-msdos-label iso_tmp -o $(RELEASE_ISO) &>/dev/null
 	@rm -rf iso_tmp
 
 # This will probably move to a shell script to enable macOS users to

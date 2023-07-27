@@ -8,16 +8,16 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __SERIAL_H_
-#define __SERIAL_H_
+#ifndef __UART_H_
+#define __UART_H_
 
 #include <luxe.h>
 
 #define COM1 0x3F8
 
-luxe_status_t serial_init();
+luxe_status_t uart_init();
 
-char serial_read();
-void serial_write(char *str);
+char uart_read();
+void uart_write(char *str);
 
-#endif /* __SERIAL_H_ */
+#endif /* __UART_H_ */

@@ -8,11 +8,11 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <dd/serial/serial.h>
+#include <dd/uart/uart.h>
 
 #include <luxe.h>
 
-luxe_status_t serial_init()
+luxe_status_t uart_init()
 {
 	outb(COM1 + 1, 0x00);
 	outb(COM1 + 3, 0x80);
@@ -26,13 +26,13 @@ luxe_status_t serial_init()
 	return luxe_success;
 }
 
-char serial_read()
+char uart_read()
 {
 	while ((inb(COM1 + 5) & 0x01) == 0);
 	return inb(COM1);
 }
 
-void serial_write(char *str)
+void uart_write(char *str)
 {
 	while (*str) {
 		while ((inb(COM1 + 5) & 0x20) == 0);
