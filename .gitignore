@@ -4,3 +4,4 @@ release/
 
 Makefile.in
 .config
+krnl/config.h

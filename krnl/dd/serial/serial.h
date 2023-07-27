@@ -8,15 +8,16 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <boot/boot.h>
-#include <dd/serial/serial.h>
+#ifndef __SERIAL_H_
+#define __SERIAL_H_
 
 #include <luxe.h>
 
-void kernel_init(void)
-{
-	serial_init();
-	serial_write("Welcome to LuxeOS");
+#define COM1 0x3F8
 
-	for (;;);
-}
+luxe_status_t serial_init();
+
+char serial_read();
+void serial_write(char *str);
+
+#endif /* __SERIAL_H_ */
