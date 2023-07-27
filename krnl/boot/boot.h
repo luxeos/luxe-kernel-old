@@ -8,9 +8,12 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <boot/boot.h>
+#ifndef __BOOT_H_
+#define __BOOT_H_
 
-void kernel_init(void)
-{
-	for (;;);
-}
+#include <boot/limine.h>
+
+extern volatile struct limine_rsdp_request rsdp_request;
+extern volatile struct limine_kernel_address_request kernel_addr_request;
+
+#endif /* __BOOT_H_ */
