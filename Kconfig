@@ -1,11 +1,14 @@
 mainmenu "LuxeOS Configuration"
 
-config ARCH
-	string "Target Architecture"
-	default "x86_64"
+choice ARCH
+	bool "Target Architecture"
+	config X86_64
+		bool "x86_64"
+	config AARCH64
+		bool "aarch64"
 	---help---
 	Build target architecture.
-	Valid targets: x86_64, aarch64
+endchoice
 
 menu "Debug"
 	config DEBUG

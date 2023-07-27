@@ -96,10 +96,10 @@ $(KERNEL): $(OBJ)
 .PHONY: clean
 clean:
 	@printf " CLEAN\n"
-	@rm -rf $(BUILD_DIR) $(RELEASE_DIR)
+	@rm -rf $(BUILD_DIR) $(RELEASE_DIR) .config.old
 
 .PHONY: distclean
 distclean:
 	@printf " DISTCLEAN\n"
 	@rm -rf $(BUILD_DIR) $(RELEASE_DIR)
-	@rm -rf Makefile.in .config
+	@rm -rf Makefile.in .config krnl/config.h
