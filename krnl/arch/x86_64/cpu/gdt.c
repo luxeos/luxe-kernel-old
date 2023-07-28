@@ -18,9 +18,9 @@ void gdt_init()
 {
 	gdt_set_entry(0, 0, 0, 0, 0);
 	gdt_set_entry(1, 0, 0, 0x9A, 0xA0);
-	gdt_set_entry(2, 0, 0, 0x92, 0xA0);
+	gdt_set_entry(2, 0, 0, 0x92, 0xC0);
 	gdt_set_entry(3, 0, 0, 0xFA, 0xA0);
-	gdt_set_entry(4, 0, 0, 0xF2, 0xA0);
+	gdt_set_entry(4, 0, 0, 0xF2, 0xC0);
 
 	gdtr_t gdtr;
 	gdtr.size = sizeof(gdt) - 1;
