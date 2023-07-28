@@ -11,8 +11,10 @@
 #include <luxe.h>
 
 #include <dd/uart/uart.h>
+#include <cpu/gdt.h>
 
 void arch_init()
 {
 	uart_init();
+	gdt_init();
 }
