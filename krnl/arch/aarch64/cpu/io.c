@@ -8,18 +8,15 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __LUXE_H_
-#define __LUXE_H_
+#include <cpu/io.h>
+#include <luxe.h>
 
-#include <config.h>
-#include <stdint.h>
+void mmio_out(uint32_t reg, uint32_t val)
+{
+	*(volatile uint32_t *)(MMIO_BASE + reg) = val;
+}
 
-#if defined(CONFIG_X86_64)
-#include <luxe/x86_64/luxe_asm.h>
-#elif defined(CONFIG_AARCH64)
-#include <luxe/aarch64/luxe_asm.h>
-#endif
-
-#include <luxe/luxe_status.h>
-
-#endif /* __LUXE_H_ */
+uint32_t mmio_in(uint32_t reg)
+{
+	return *(volatile uint32_t *)(MMIO_BASE + reg);
+}

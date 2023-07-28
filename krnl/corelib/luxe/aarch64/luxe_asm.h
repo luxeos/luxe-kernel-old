@@ -8,18 +8,14 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __LUXE_H_
-#define __LUXE_H_
+#ifndef __LUXE_ASM_H_
+#define __LUXE_ASM_H_
 
-#include <config.h>
 #include <stdint.h>
 
-#if defined(CONFIG_X86_64)
-#include <luxe/x86_64/luxe_asm.h>
-#elif defined(CONFIG_AARCH64)
-#include <luxe/aarch64/luxe_asm.h>
-#endif
+static inline void delay(int32_t count)
+{
+	__asm__ volatile("__delay_%=: subs %[count], %[count], #1; bne __delay_%=" : "=r"(count) : [count]"0"(count) : "cc");
+}
 
-#include <luxe/luxe_status.h>
-
-#endif /* __LUXE_H_ */
+#endif /* __LUXE_ASM_H_ */

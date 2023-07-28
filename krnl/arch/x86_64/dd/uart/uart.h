@@ -17,7 +17,6 @@
 
 luxe_status_t uart_init();
 
-char uart_read();
 void uart_write(char *str);
 
 #endif /* __UART_H_ */

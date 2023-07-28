@@ -26,12 +26,6 @@ luxe_status_t uart_init()
 	return luxe_success;
 }
 
-char uart_read()
-{
-	while ((inb(COM1 + 5) & 0x01) == 0);
-	return inb(COM1);
-}
-
 void uart_write(char *str)
 {
 	while (*str) {

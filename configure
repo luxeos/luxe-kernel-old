@@ -40,7 +40,8 @@ x86_64_cflags="-m64 -march=x86-64 -mno-80387 -mno-mmx -mno-sse -mno-sse2 -mno-re
 x86_64_ldflags="-melf_x86_64"
 x86_64_asflags="-felf64"
 
-x86_64_qemuflags="-M q35 -m 1G -serial stdio -no-reboot -no-shutdown -cdrom \$(RELEASE_ISO) -bios aux/ovmf-\$(ARCH).fd"
+x86_64_qemuflags_iso="-M q35 -m 4G -serial stdio -no-reboot -no-shutdown -cdrom \$(RELEASE_ISO) -bios aux/ovmf-\$(ARCH).fd"
+x86_64_qemuflags_hdd="-M q35 -m 4G -serial stdio -no-reboot -no-shutdown -drive file=\$(RELEASE_HDD),if=ide,id=drive-ide0-0-0 -bios aux/ovmf-\$(ARCH).fd"
 
 ########################################
 ### AARCH64
@@ -49,7 +50,8 @@ x86_64_qemuflags="-M q35 -m 1G -serial stdio -no-reboot -no-shutdown -cdrom \$(R
 aarch64_cflags="-mgeneral-regs-only"
 aarch64_ldflags="-maarch64elf"
 
-aarch64_qemuflags="-M virt -m 1G -cpu cortex-a72 -device ramfb -device qemu-xhci -device usb-kbd -cdrom \$(RELEASE_ISO) -bios aux/ovmf-\$(ARCH).fd"
+aarch64_qemuflags_iso="-M virt -m 4G -cpu cortex-a72 -smp 8 -serial stdio -device qemu-xhci -device ramfb -device qemu-xhci -device usb-kbd -cdrom \$(RELEASE_ISO) -bios aux/ovmf-\$(ARCH).fd"
+aarch64_qemuflags_hdd="-M virt -m 4G -cpu cortex-a72 -smp 8 -serial stdio -device qemu-xhci -device ramfb -device qemu-xhci -device usb-kbd -drive if=none,file=\$(RELEASE_HDD),format=raw,id=drive-usb -device usb-storage,drive=drive-usb -bios aux/ovmf-\$(ARCH).fd"
 
 ########################################
 ### GENERAL
@@ -97,14 +99,16 @@ make_write "	AS := nasm"
 make_write "	ASFLAGS := $x86_64_asflags"
 make_write "	CFLAGS := $x86_64_cflags"
 make_write "	LDFLAGS := $x86_64_ldflags"
-make_write "	QEMUFLAGS := $x86_64_qemuflags"
+make_write "	QEMUFLAGS_ISO := $x86_64_qemuflags_iso"
+make_write "	QEMUFLAGS_HDD := $x86_64_qemuflags_hdd"
 make_write "	EFI_BOOTFILE := BOOTX64.EFI"
 make_write "else ifeq (\$(CONFIG_AARCH64),y)"
 make_write "	ARCH := aarch64"
 make_write "	PREFIX := aarch64-elf"
 make_write "	CFLAGS := $aarch64_cflags"
 make_write "	LDFLAGS := $aarch64_ldflags"
-make_write "	QEMUFLAGS := $aarch64_qemuflags"
+make_write "	QEMUFLAGS_ISO := $aarch64_qemuflags_iso"
+make_write "	QEMUFLAGS_HDD := $aarch64_qemuflags_hdd"
 make_write "	EFI_BOOTFILE := BOOTAA64.EFI"
 make_write "endif"
 make_write ""

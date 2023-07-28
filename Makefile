@@ -13,10 +13,10 @@ include .config
 include Makefile.in
 
 .PHONY: all
-all: release_iso
+all: full_release
 
-.PHONY: release
-release: release_iso release_hdd
+.PHONY: full_release
+full_release: release_iso release_hdd
 
 .PHONY: release_iso
 release_iso: $(RELEASE_ISO)
@@ -25,8 +25,18 @@ release_iso: $(RELEASE_ISO)
 release_hdd: $(RELEASE_HDD)
 
 .PHONY: run
-run: release_iso
-	@$(QEMU) $(QEMUFLAGS)
+run: qemu-iso
+
+.PHONY: run-hdd
+run-hdd: qemu-hdd
+
+.PHONY: qemu-iso
+qemu-iso: release_iso
+	@$(QEMU) $(QEMUFLAGS_ISO)
+
+.PHONY: qemu-hdd
+qemu-hdd: release_hdd
+	@$(QEMU) $(QEMUFLAGS_HDD)
 
 .config:
 	@ex/kconfiglib/alldefconfig.py
@@ -54,28 +64,16 @@ $(RELEASE_ISO): $(KERNEL)
 	@xorriso -as mkisofs -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot limine-uefi-cd.bin -efi-boot-part --efi-boot-image --protective-msdos-label iso_tmp -o $(RELEASE_ISO) &>/dev/null
 	@rm -rf iso_tmp
 
-# This will probably move to a shell script to enable macOS users to
-# generate .img files as well
-# NOTE: This has not been tested, use at your own
 $(RELEASE_HDD): $(KERNEL)
 	@printf " GEN  $(notdir $(RELEASE_HDD))\n"
 	@mkdir -p $(RELEASE_DIR)
-	@dd if=/dev/zero bs=1M count=0 seek=64 of=$(RELEASE_HDD)
-	@parted -s $(RELEASE_HDD) mklabel gpt
-	@parted -s $(RELEASE_HDD) mkpart ESP fat32 2048s 100%
-	@parted -s $(RELEASE_HDD) set 1 esp on
-	@ex/limine/limine bios-install $(RELEASE_HDD) &>/dev/null
-	LOOPBACK := $(shell sudo losetup -Pf --show $(RELEASE_HDD))
-	@sudo mkfs.fat32 $(LOOPBACK)p1
-	@mkdir -p hdd_tmp
-	@sudo mount $(LOOPBACK)p1 hdd_tmp
-	@sudo mkdir -p hdd_tmp/EFI/BOOT
-	@sudo cp $(KERNEL) aux/limine.cfg ex/limine/limine-bios.sys hdd_tmp
-	@sudo cp ex/limine/BOOTX64.EFI hdd_tmp/EFI/BOOT/
-	@sync
-	@sudo umount hdd_tmp
-	@sudo losetup -d $(LOOPBACK)
-	@sudo rm -rf hdd_tmp
+	@dd if=/dev/zero of=$(RELEASE_HDD) bs=1k count=1440
+	@mformat -i $(RELEASE_HDD) -f 1440 ::
+	@mmd -i $(RELEASE_HDD) ::/EFI
+	@mmd -i $(RELEASE_HDD) ::/EFI/BOOT
+	@mcopy -i $(RELEASE_HDD) ex/limine/$(EFI_BOOTFILE) ::/EFI/BOOT
+	@mcopy -i $(RELEASE_HDD) aux/limine.cfg ::
+	@mcopy -i $(RELEASE_HDD) $(KERNEL) ::
 
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
