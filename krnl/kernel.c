@@ -8,7 +8,6 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <arch.h>
 #include <boot/boot.h>
 #include <dd/uart/uart.h>
 
