@@ -9,15 +9,12 @@
  */
 
 #include <boot/boot.h>
-#include <dd/uart/uart.h>
-
 #include <luxe.h>
 
 void kernel_init(void)
 {
 	arch_init();
 
-	uart_write("Welcome to LuxeOS");
-
+	klog("Welcome to LuxeOS");
 	for (;;);
 }

@@ -11,9 +11,12 @@
 #ifndef __LUXE_H_
 #define __LUXE_H_
 
+#include <config.h>
 #include <arch.h>
 
-#include <config.h>
+#include <debug/klog.h>
+
+#include <stdarg.h>
 #include <stdint.h>
 
 #if defined(CONFIG_X86_64)
