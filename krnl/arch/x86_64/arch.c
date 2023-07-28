@@ -8,14 +8,11 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __LUXE_ASM_H_
-#define __LUXE_ASM_H_
+#include <luxe.h>
 
-#include <stdint.h>
+#include <dd/uart/uart.h>
 
-static inline void delay(int32_t count)
+void arch_init()
 {
-	__asm__ volatile("__delay_%=: subs %[count], %[count], #1; bne __delay_%=" : "=r"(count) : [count]"0"(count) : "cc");
+	uart_init();
 }
-
-#endif /* __LUXE_ASM_H_ */

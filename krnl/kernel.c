@@ -8,6 +8,7 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#include <arch.h>
 #include <boot/boot.h>
 #include <dd/uart/uart.h>
 
@@ -15,7 +16,8 @@
 
 void kernel_init(void)
 {
-	uart_init();
+	arch_init();
+
 	uart_write("Welcome to LuxeOS");
 
 	for (;;);

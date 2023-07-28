@@ -11,13 +11,13 @@
 #ifndef __LUXE_H_
 #define __LUXE_H_
 
+#include <arch.h>
+
 #include <config.h>
 #include <stdint.h>
 
 #if defined(CONFIG_X86_64)
 #include <luxe/x86_64/luxe_asm.h>
-#elif defined(CONFIG_AARCH64)
-#include <luxe/aarch64/luxe_asm.h>
 #endif
 
 #include <luxe/luxe_status.h>

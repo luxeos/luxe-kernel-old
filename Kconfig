@@ -4,8 +4,6 @@ choice ARCH
 	bool "Target Architecture"
 	config X86_64
 		bool "x86_64"
-	config AARCH64
-		bool "aarch64"
 	---help---
 	Build target architecture.
 endchoice

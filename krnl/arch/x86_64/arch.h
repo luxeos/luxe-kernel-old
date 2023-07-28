@@ -8,15 +8,9 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <cpu/io.h>
-#include <luxe.h>
+#ifndef __ARCH_H_
+#define __ARCH_H_
 
-void mmio_out(uint32_t reg, uint32_t val)
-{
-	*(volatile uint32_t *)(MMIO_BASE + reg) = val;
-}
+void arch_init();
 
-uint32_t mmio_in(uint32_t reg)
-{
-	return *(volatile uint32_t *)(MMIO_BASE + reg);
-}
+#endif /* __ARCH_H_ */
