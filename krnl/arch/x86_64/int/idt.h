@@ -23,7 +23,7 @@ typedef struct {
 	uint8_t ist; // always zero for now
 	uint8_t flags;
 	uint16_t addr_mid; // 16:31 handler
-	uint16_t addr_upper; // 32:63 handler
+	uint32_t addr_upper; // 32:63 handler
 	uint32_t reserved; // always zero
 } __attribute__((packed)) idt_t;
 

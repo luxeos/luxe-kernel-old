@@ -43,14 +43,12 @@ void idt_set_entry(uint8_t vector, uint64_t handler, uint8_t flags)
 	idt_t *entry = &idt[vector];
 
 	entry->addr_low = handler & 0xFFFF;
-	entry->selector = 0x08; // entry 1 * 8 bytes per descriptor
+	entry->selector = 0x08; // kernel cs
 	entry->ist = 0;
 	entry->flags = flags;
 	entry->addr_mid = (handler >> 16) & 0xFFFF;
 	entry->addr_upper = handler >> 32;
 	entry->reserved = 0;
-
-	klog("registered entry %i with handler at 0x%x", vector, handler);
 }
 
 uint64_t int_handler(uint64_t rsp)
