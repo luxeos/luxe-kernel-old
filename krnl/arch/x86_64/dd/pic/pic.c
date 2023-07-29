@@ -14,25 +14,6 @@ void pic_remap()
 	outb(PIC2_DATA, 0x01);
 }
 
-void pic_mask(int irq)
+void pic_disable()
 {
-	uint8_t port;
-
-	if (irq < 8) {
-		port = PIC1_DATA;
-	} else {
-		irq -= 8;
-		port = PIC2_DATA;
-	}
-
-	uint8_t mask = inb(port);
-	outb(port, mask | (1 << irq));
-}
-
-void pic_eoi(uint8_t irq)
-{
-	if (irq >= 8) {
-		outb(PIC2_COMD, PIC_EOI);
-	}
-	outb(PIC1_COMD, PIC_EOI);
 }

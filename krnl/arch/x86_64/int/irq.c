@@ -8,15 +8,12 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __PIC_H_
-#define __PIC_H_
+#include <int/idt.h>
+#include <dd/pic/pic.h>
+#include <cpu/cpu.h>
 
-#define PIC1_COMD	0x20
-#define PIC1_DATA	0x21
-#define PIC2_COMD	0xA0
-#define PIC2_DATA	0xA1
+#include <luxe.h>
 
-void pic_remap();
-void pic_disable();
-
-#endif /* __PIC_H_ */
+/*void irq_register(uint8_t irq, void *handler)
+{
+}*/

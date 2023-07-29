@@ -26,13 +26,10 @@ void idt_init()
 
 	pic_remap();
 
-	for (int i = 0; i < 16; i++) {
-		pic_mask(i);
-	}
-
 	idtr_t idtr;
 	idtr.limit = sizeof(idt) - 1;
 	idtr.base = (uint64_t)&idt;
+	(void)idtr;
 	_idt_load(&idtr);
 
 	klog("done");
@@ -54,11 +51,34 @@ void idt_set_entry(uint8_t vector, uint64_t handler, uint8_t flags)
 uint64_t int_handler(uint64_t rsp)
 {
 	cpu_regs_t *context = (cpu_regs_t *)rsp;
+	
+	if (context->vector <= 0x20) {
+		_klog("                         /\\\n");
+		_klog("                        /  \\\n");
+		_klog("                       |    |\n");
+		_klog("                     --:'''':--\n");
+		_klog("                       :'_' :\n");
+		_klog("                       _:"":\\___\n");
+		_klog("        ' '      ____.' :::     '._\n");
+		_klog("       . *=====<<=)           \\    :\n");
+		_klog("        .  '      '-'-'\\_      /'._.'\n");
+		_klog("                         \\====:_ ""\n");
+		_klog("                        .'     \\\\\n");
+		_klog("                       :       :\n");
+		_klog("                      /   :    \\\n");
+		_klog("                     :   .      '.\n");
+		_klog("                     :  : :      :\n");
+		_klog("                     :__:-:__.;--'\n");
+		_klog("                     '-'   '-'\n");
+		_klog("    You have been visited by the mighty wizard.\n");
+		_klog("  A fatal error occured, and the computer cannot function properly anymore.\n");
+		_klog("  Please send the following to the developers:\n\n");
 
-	klog("Interrupt");
-	switch (context->vector) {
-		case 0:
-			klog("Division by Zero");
+		_klog("Vector #: %i\n", context->vector);
+		_klog("Error Code: 0x%.8llx\n\n", context->error);
+
+		// TODO: Stack Trace & Resolving function names
+		//_klog("Stack trace:\n");
 	}
 
 	for (;;) {
