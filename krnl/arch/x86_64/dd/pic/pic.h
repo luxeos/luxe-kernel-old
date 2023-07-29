@@ -8,15 +8,17 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <boot/boot.h>
-#include <luxe.h>
+#ifndef __PIC_H_
+#define __PIC_H_
 
-void kernel_init(void)
-{
-	arch_init();
+#define PIC1_COMD	0x20
+#define PIC1_DATA	0x21
+#define PIC2_COMD	0xA0
+#define PIC2_DATA	0xA1
 
-	__asm__("int $0x03");
+#define PIC_EOI 0x20
 
-	klog("Welcome to LuxeOS");
-	for (;;);
-}
+void pic_remap();
+void pic_mask(int irq);
+
+#endif /* __PIC_H_ */

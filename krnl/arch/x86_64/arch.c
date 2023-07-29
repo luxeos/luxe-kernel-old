@@ -12,9 +12,12 @@
 
 #include <dd/uart/uart.h>
 #include <cpu/gdt.h>
+#include <int/idt.h>
 
 void arch_init()
 {
 	uart_init();
+
 	gdt_init();
+	idt_init();
 }

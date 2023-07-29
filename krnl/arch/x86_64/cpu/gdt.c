@@ -16,11 +16,11 @@ gdt_t gdt[GDT_ENTRIES];
 
 void gdt_init()
 {
-	gdt_set_entry(0, 0, 0, 0, 0);
-	gdt_set_entry(1, 0, 0, 0x9A, 0xA0);
-	gdt_set_entry(2, 0, 0, 0x92, 0xC0);
-	gdt_set_entry(3, 0, 0, 0xFA, 0xA0);
-	gdt_set_entry(4, 0, 0, 0xF2, 0xC0);
+	gdt_set_entry(0, 0, 0, 0, 0); // = null descriptor
+	gdt_set_entry(1, 0, 0, 0x9A, 0xA0); // = kernel cs
+	gdt_set_entry(2, 0, 0, 0x92, 0xC0); // = kernel ds
+	gdt_set_entry(3, 0, 0, 0xFA, 0xA0); // = user cs
+	gdt_set_entry(4, 0, 0, 0xF2, 0xC0); // = user ds
 
 	gdtr_t gdtr;
 	gdtr.size = sizeof(gdt) - 1;
