@@ -8,19 +8,15 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <luxe.h>
+#ifndef __MADT_H_
+#define __MADT_H_
 
 #include <acpi/acpi.h>
-#include <dd/uart/uart.h>
-#include <cpu/gdt.h>
-#include <int/idt.h>
 
-void arch_init()
-{
-	uart_init();
+typedef struct {
+	sdt_t header;
+	uint32_t lapic_address;
+	uint32_t flags;
+} __attribute__((packed)) madt_t;
 
-	gdt_init();
-	idt_init();
-
-	acpi_init();
-}
+#endif /* __MADT_H_ */
