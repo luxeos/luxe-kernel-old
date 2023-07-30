@@ -11,6 +11,7 @@
 #include <int/idt.h>
 #include <dd/pic/pic.h>
 #include <cpu/cpu.h>
+#include <panic.h>
 
 #include <luxe.h>
 
@@ -53,29 +54,8 @@ uint64_t int_handler(uint64_t rsp)
 	cpu_regs_t *context = (cpu_regs_t *)rsp;
 	
 	if (context->vector <= 0x20) {
-		_klog("                         /\\\n");
-		_klog("                        /  \\\n");
-		_klog("                       |    |\n");
-		_klog("                     --:'''':--\n");
-		_klog("                       :'_' :\n");
-		_klog("                       _:"":\\___\n");
-		_klog("        ' '      ____.' :::     '._\n");
-		_klog("       . *=====<<=)           \\    :\n");
-		_klog("        .  '      '-'-'\\_      /'._.'\n");
-		_klog("                         \\====:_ ""\n");
-		_klog("                        .'     \\\\\n");
-		_klog("                       :       :\n");
-		_klog("                      /   :    \\\n");
-		_klog("                     :   .      '.\n");
-		_klog("                     :  : :      :\n");
-		_klog("                     :__:-:__.;--'\n");
-		_klog("                     '-'   '-'\n");
-		_klog("    You have been visited by the mighty wizard.\n");
-		_klog("  A fatal error occured, and the computer cannot function properly anymore.\n");
-		_klog("  Please send the following to the developers:\n\n");
-
+		wizard_show();
 		_klog("Vector 0x%.2x, Error 0x%x\n", context->vector, context->error);
-
 		_klog("Stack trace:\n");
 		backtrace();
 		_klog("End of trace. System halted.");

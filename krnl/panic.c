@@ -14,7 +14,32 @@
 #include <luxe.h>
 
 __attribute__((noreturn))
-void panic()
+void _panic()
 {
+	wizard_show();
 	for (;;);
+}
+
+void wizard_show()
+{
+	_klog("                         /\\\n");
+	_klog("                        /  \\\n");
+	_klog("                       |    |\n");
+	_klog("                     --:'''':--\n");
+	_klog("                       :'_' :\n");
+	_klog("                       _:"":\\___\n");
+	_klog("        ' '      ____.' :::     '._\n");
+	_klog("       . *=====<<=)           \\    :\n");
+	_klog("        .  '      '-'-'\\_      /'._.'\n");
+	_klog("                         \\====:_ ""\n");
+	_klog("                        .'     \\\\\n");
+	_klog("                       :       :\n");
+	_klog("                      /   :    \\\n");
+	_klog("                     :   .      '.\n");
+	_klog("                     :  : :      :\n");
+	_klog("                     :__:-:__.;--'\n");
+	_klog("                     '-'   '-'\n");
+	_klog("    You have been visited by the mighty wizard.\n");
+	_klog("  A fatal error occured, and the computer cannot function properly anymore.\n");
+	_klog("  Please send the following to the developers:\n\n");
 }

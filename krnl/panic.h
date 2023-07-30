@@ -11,6 +11,8 @@
 #ifndef __PANIC_H_
 #define __PANIC_H_
 
-void panic();
+void _panic();
+
+void wizard_show();
 
 #endif /* __PANIC_H_ */
