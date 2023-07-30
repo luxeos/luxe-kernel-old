@@ -8,24 +8,11 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __LUXE_H_
-#define __LUXE_H_
+#ifndef __STRING_H_
+#define __STRING_H_
 
-#include <config.h>
-#include <arch.h>
-
-#include <debug/klog.h>
-
-#include <assert.h>
-#include <stdarg.h>
 #include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
 
-#if defined(CONFIG_X86_64)
-#include <luxe/x86_64/luxe_asm.h>
-#endif
+int strncmp(const char *s1, const char *s2, size_t n);
 
-#include <luxe/luxe_status.h>
-
-#endif /* __LUXE_H_ */
+#endif /* __STRING_H_ */

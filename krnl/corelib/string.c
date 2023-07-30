@@ -8,24 +8,19 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __LUXE_H_
-#define __LUXE_H_
-
-#include <config.h>
-#include <arch.h>
-
-#include <debug/klog.h>
-
-#include <assert.h>
-#include <stdarg.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <string.h>
 
-#if defined(CONFIG_X86_64)
-#include <luxe/x86_64/luxe_asm.h>
-#endif
-
-#include <luxe/luxe_status.h>
-
-#endif /* __LUXE_H_ */
+int strncmp(const char *s1, const char *s2, size_t n)
+{
+	while (n && *s1 && (*s1 == *s2)) {
+		++s1;
+		++s2;
+		--n;
+	}
+	if (n == 0) {
+		return 0;
+	} else {
+		return (*(uint8_t *)s1 - *(uint8_t *)s2);
+	}
+}
