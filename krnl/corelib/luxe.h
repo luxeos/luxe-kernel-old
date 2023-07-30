@@ -19,6 +19,7 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #if defined(CONFIG_X86_64)
 #include <luxe/x86_64/luxe_asm.h>
