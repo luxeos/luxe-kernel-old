@@ -25,4 +25,18 @@ static inline uint8_t inb(uint16_t port)
 	return retval;
 }
 
+static inline void wrmsr(uint64_t msr, uint64_t value)
+{
+	uint32_t lower = value & 0xFFFFFFFF;
+	uint32_t upper = value >> 32;
+	__asm__ volatile("wrmsr" :: "c"(msr), "a"(lower), "d"(upper));
+}
+
+static inline uint64_t rdmsr(uint64_t msr)
+{
+	uint32_t lower, upper;
+	__asm__ volatile("rdmsr" : "=a"(lower), "=d"(upper) : "c"(msr));
+	return (((uint64_t)upper << 32) | lower);
+}
+
 #endif /* __LUXE_ASM_H_ */

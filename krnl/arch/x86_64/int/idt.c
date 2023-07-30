@@ -9,7 +9,7 @@
  */
 
 #include <int/idt.h>
-#include <dd/pic/pic.h>
+#include <dd/apic/pic.h>
 #include <cpu/cpu.h>
 #include <panic.h>
 

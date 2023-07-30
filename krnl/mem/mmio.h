@@ -8,11 +8,12 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <int/idt.h>
-#include <cpu/cpu.h>
+#ifndef __IO_H_
+#define __IO_H_
 
 #include <luxe.h>
 
-/*void irq_register(uint8_t irq, void *handler)
-{
-}*/
+void mmio_write(uint32_t reg, uint32_t val);
+uint32_t mmio_read(uint32_t reg);
+
+#endif /* __IO_H_ */

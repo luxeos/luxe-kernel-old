@@ -11,6 +11,7 @@
 #include <luxe.h>
 
 #include <acpi/acpi.h>
+#include <dd/apic/lapic.h>
 #include <dd/uart/uart.h>
 #include <cpu/gdt.h>
 #include <int/idt.h>
@@ -23,4 +24,5 @@ void arch_init()
 	idt_init();
 
 	acpi_init();
+	lapic_init();
 }

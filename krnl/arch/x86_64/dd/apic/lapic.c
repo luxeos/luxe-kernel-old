@@ -8,11 +8,19 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <int/idt.h>
-#include <cpu/cpu.h>
+#include <dd/apic/lapic.h>
+#include <dd/apic/pic.h>
+#include <mem/mmio.h>
 
 #include <luxe.h>
 
-/*void irq_register(uint8_t irq, void *handler)
+uint64_t *lapic_base;
+
+void lapic_init()
 {
-}*/
+	pic_disable();
+
+	lapic_base = (uint64_t *)rdmsr(IA32_APIC_BASE);
+
+	// klog("apic ver 0x%8x", mmio_read(APIC_REG_VER));
+}
