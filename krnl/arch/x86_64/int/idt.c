@@ -77,7 +77,8 @@ uint64_t int_handler(uint64_t rsp)
 		_klog("Vector 0x%.2x, Error 0x%x\n", context->vector, context->error);
 
 		_klog("Stack trace:\n");
-		backtrace(context->rbp);
+
+		backtrace(10);
 	}
 
 	for (;;) {

@@ -6,3 +6,4 @@ Makefile.in
 .config
 .config.old
 krnl/config.h
+krnl/debug/_symtbl.map

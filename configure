@@ -29,6 +29,12 @@ fi
 
 make -C ex/limine
 
+chmod +x utils/gensym.sh
+
+########################################
+### MODIFIABLE
+########################################
+
 build_dir="build"
 release_dir="release"
 
@@ -74,6 +80,9 @@ make_write ""
 make_write "BUILD_DIR := $build_dir"
 make_write "KERNEL := \$(BUILD_DIR)/krnl.sys"
 make_write ""
+make_write "SYMFILE := krnl/debug/_symtbl.map"
+make_write "SYMOBJ := \$(BUILD_DIR)/krnl/debug/_symtbl.o"
+make_write ""
 make_write "RELEASE_DIR := $release_dir"
 make_write "RELEASE_ISO := \$(RELEASE_DIR)/luxe-cd-\$(GIT_REVISION)_\$(ARCH).iso"
 make_write "RELEASE_HDD := \$(RELEASE_DIR)/luxe-hdd-\$(GIT_REVISION)_\$(ARCH).img"
@@ -99,6 +108,7 @@ make_write ""
 make_write "CC := \$(PREFIX)-gcc"
 make_write "LD := \$(PREFIX)-ld"
 make_write "OBJCOPY := \$(PREFIX)-objcopy"
+make_write "PYTHON3 := python3"
 make_write "QEMU := qemu-system-\$(ARCH)"
 make_write ""
 make_write "CFLAGS += $cflags"
