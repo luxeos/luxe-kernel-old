@@ -16,6 +16,7 @@
 
 #include <debug/klog.h>
 
+#include <assert.h>
 #include <stdarg.h>
 #include <stdint.h>
 

@@ -17,7 +17,15 @@ __attribute__((noreturn))
 void _panic()
 {
 	wizard_show();
-	for (;;);
+	//_klog("%s", message);
+
+	_klog("Stack trace:\n");
+	backtrace();
+	_klog("End of trace. System halted.");
+	
+	for (;;) {
+		__asm__("hlt");
+	}
 }
 
 void wizard_show()

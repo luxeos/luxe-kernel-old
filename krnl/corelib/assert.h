@@ -8,13 +8,13 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __PANIC_H_
-#define __PANIC_H_
+#ifndef __ASSERT_H_
+#define __ASSERT_H_
 
-#define panic() _panic()
+#include <panic.h>
 
-void _panic();
+#define assert(expr) \
+	if (!(expr)) \
+		panic()
 
-void wizard_show();
-
-#endif /* __PANIC_H_ */
+#endif /* __ASSERT_H_ */
