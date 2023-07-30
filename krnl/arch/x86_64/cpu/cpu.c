@@ -13,9 +13,8 @@
 
 #include <luxe.h>
 
-void backtrace(uint8_t walk_max)
+void backtrace()
 {
-	(void)walk_max;
 	uint64_t *base;
 	__asm__ volatile("mov %%rbp, %0" : "=g"(base) :: "memory");
 
@@ -34,8 +33,6 @@ void backtrace(uint8_t walk_max)
 			_klog("    [%.16lx]  <%s+0x%04x>\n", return_addr, _symtab[idx].name, return_addr - _symtab[idx].addr);
 		}
 	}
-
-	_klog("End of trace.\n");
 }
 
 int _sym_get_index(uint64_t addr)

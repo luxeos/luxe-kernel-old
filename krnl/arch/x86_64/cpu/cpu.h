@@ -40,7 +40,7 @@ typedef struct {
     uint64_t ss;
 } cpu_regs_t;
 
-void backtrace(uint8_t walk_max);
+void backtrace();
 int _sym_get_index(uint64_t addr);
 
 #endif /* __CPU_H_ */

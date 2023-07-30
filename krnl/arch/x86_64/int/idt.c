@@ -77,12 +77,13 @@ uint64_t int_handler(uint64_t rsp)
 		_klog("Vector 0x%.2x, Error 0x%x\n", context->vector, context->error);
 
 		_klog("Stack trace:\n");
+		backtrace();
+		_klog("End of trace. System halted.");
 
-		backtrace(10);
+		for (;;) {
+			__asm__("hlt");
+		}
 	}
 
-	for (;;) {
-		__asm__("hlt");
-	}
 	return rsp;
 }
