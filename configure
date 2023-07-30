@@ -46,7 +46,7 @@ x86_64_qemuflags="-M q35 -m 4G -serial stdio -no-reboot -cdrom \$(RELEASE_ISO) -
 ### GENERAL
 ########################################
 
-cflags="-Wall -Wextra -Werror -std=c99 -ffreestanding -fno-stack-protector -fno-stack-check -fno-lto -fPIE"
+cflags="-Wall -Wextra -Werror -std=c99 -ffreestanding -fno-stack-protector -fno-stack-check -fno-omit-frame-pointer -fno-lto -fPIE"
 cppflags="\$(INCDIR:%=-I%) -MMD -MP"
 ldflags="-nostdlib -static -pie --no-dynamic-linker -ztext -zmax-page-size=0x1000 -T aux/linker-\$(ARCH).ld"
 

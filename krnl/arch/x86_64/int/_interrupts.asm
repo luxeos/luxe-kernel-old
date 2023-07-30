@@ -14,13 +14,13 @@
 extern int_handler
 
 int_stub:
-	cld
 	pushaq
+	cld
 	mov rdi, rsp
 	call int_handler
 	mov rsp, rax
 	popaq
-	add rsp, 16
+	add rsp, 8
 	iretq
 
 %macro vector_error 1

@@ -74,15 +74,14 @@ uint64_t int_handler(uint64_t rsp)
 		_klog("  A fatal error occured, and the computer cannot function properly anymore.\n");
 		_klog("  Please send the following to the developers:\n\n");
 
-		_klog("Vector #: %i\n", context->vector);
-		_klog("Error Code: 0x%.8llx\n\n", context->error);
+		_klog("Vector 0x%.2x, Error 0x%x\n", context->vector, context->error);
 
-		// TODO: Stack Trace & Resolving function names
-		//_klog("Stack trace:\n");
+		_klog("Stack trace:\n");
+		backtrace(context->rbp);
 	}
 
 	for (;;) {
 		__asm__("hlt");
 	}
-	return context->rsp;
+	return rsp;
 }
