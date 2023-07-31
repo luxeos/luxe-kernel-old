@@ -11,6 +11,8 @@
 #ifndef __PHYS_H_
 #define __PHYS_H_
 
+#define PAGE_SIZE 4096
+
 void bitmap_set(uint8_t bit);
 void bitmap_clear(uint8_t bit);
 uint8_t bitmap_test(uint8_t bit);

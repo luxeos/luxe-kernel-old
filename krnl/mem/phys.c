@@ -16,33 +16,40 @@ static uint64_t *bitmap = NULL;
 
 void bitmap_set(uint8_t bit)
 {
-	bitmap[bit / 8] |= (1 << (bit % 8));
+	bitmap[bit / 64] |= (1 << (bit % 64));
 }
 
 void bitmap_clear(uint8_t bit)
 {
-	bitmap[bit / 8] &= ~(1 << (bit % 8));
+	bitmap[bit / 64] &= ~(1 << (bit % 64));
 }
 
 uint8_t bitmap_test(uint8_t bit)
 {
-	return bitmap[bit / 8] & (1 << (bit % 8));
+	return bitmap[bit / 64] & (1 << (bit % 64));
 }
 
 void phys_init()
 {
 	struct limine_memmap_response *mmap = memmap_request.response;
+
 	for (uint8_t i = 0; i < mmap->entry_count; i++) {
 		struct limine_memmap_entry *entry = mmap->entries[i];
+
 		klog("entry %i, base: 0x%lx, length: 0x%lx, type: %s", i, entry->base,
 			 entry->length, _phys_get_type(entry->type));
 
-		if (entry->type != LIMINE_MEMMAP_USABLE ||
-			entry->type != LIMINE_MEMMAP_ACPI_RECLAIMABLE ||
+		if (entry->type != LIMINE_MEMMAP_USABLE &&
+			entry->type != LIMINE_MEMMAP_ACPI_RECLAIMABLE &&
 			entry->type != LIMINE_MEMMAP_BOOTLOADER_RECLAIMABLE) {
 			continue;
 		}
 	}
+}
+
+void phys_alloc(uint64_t size)
+{
+	(void)size;
 }
 
 char *_phys_get_type(uint64_t type)
