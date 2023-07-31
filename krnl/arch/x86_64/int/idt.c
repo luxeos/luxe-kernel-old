@@ -52,7 +52,7 @@ void idt_set_entry(uint8_t vector, uint64_t handler, uint8_t flags)
 uint64_t int_handler(uint64_t rsp)
 {
 	cpu_regs_t *context = (cpu_regs_t *)rsp;
-	
+
 	if (context->vector <= 0x20) {
 		wizard_show();
 		_klog("Vector 0x%.2x, Error 0x%x\n", context->vector, context->error);

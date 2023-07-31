@@ -34,9 +34,12 @@ void phys_init()
 	struct limine_memmap_response *mmap = memmap_request.response;
 	for (uint8_t i = 0; i < mmap->entry_count; i++) {
 		struct limine_memmap_entry *entry = mmap->entries[i];
-		klog("entry %i, base: 0x%lx, length: 0x%lx, type: %s", i, entry->base, entry->length, _phys_get_type(entry->type));
+		klog("entry %i, base: 0x%lx, length: 0x%lx, type: %s", i, entry->base,
+			 entry->length, _phys_get_type(entry->type));
 
-		if (entry->type != LIMINE_MEMMAP_USABLE || entry->type != LIMINE_MEMMAP_ACPI_RECLAIMABLE || entry->type != LIMINE_MEMMAP_BOOTLOADER_RECLAIMABLE) {
+		if (entry->type != LIMINE_MEMMAP_USABLE ||
+			entry->type != LIMINE_MEMMAP_ACPI_RECLAIMABLE ||
+			entry->type != LIMINE_MEMMAP_BOOTLOADER_RECLAIMABLE) {
 			continue;
 		}
 	}
@@ -45,23 +48,23 @@ void phys_init()
 char *_phys_get_type(uint64_t type)
 {
 	switch (type) {
-		case LIMINE_MEMMAP_USABLE:
-			return "Usable";
-		case LIMINE_MEMMAP_RESERVED:
-			return "Reserved";
-		case LIMINE_MEMMAP_ACPI_RECLAIMABLE:
-			return "ACPI Reclaimable";
-		case LIMINE_MEMMAP_ACPI_NVS:
-			return "ACPI NVS";
-		case LIMINE_MEMMAP_BAD_MEMORY:
-			return "Bad Memory";
-		case LIMINE_MEMMAP_BOOTLOADER_RECLAIMABLE:
-			return "Bootloader Reclaimable";
-		case LIMINE_MEMMAP_KERNEL_AND_MODULES:
-			return "Kernel and Modules";
-		case LIMINE_MEMMAP_FRAMEBUFFER:
-			return "Framebuffer";
-		default:
-			return "???";
+	case LIMINE_MEMMAP_USABLE:
+		return "Usable";
+	case LIMINE_MEMMAP_RESERVED:
+		return "Reserved";
+	case LIMINE_MEMMAP_ACPI_RECLAIMABLE:
+		return "ACPI Reclaimable";
+	case LIMINE_MEMMAP_ACPI_NVS:
+		return "ACPI NVS";
+	case LIMINE_MEMMAP_BAD_MEMORY:
+		return "Bad Memory";
+	case LIMINE_MEMMAP_BOOTLOADER_RECLAIMABLE:
+		return "Bootloader Reclaimable";
+	case LIMINE_MEMMAP_KERNEL_AND_MODULES:
+		return "Kernel and Modules";
+	case LIMINE_MEMMAP_FRAMEBUFFER:
+		return "Framebuffer";
+	default:
+		return "???";
 	}
 }

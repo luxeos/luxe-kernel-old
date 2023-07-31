@@ -11,8 +11,7 @@
 #include <luxe.h>
 #include <stdint.h>
 
-__attribute__((aligned(0x1000)))
-gdt_t gdt[GDT_ENTRIES];
+__attribute__((aligned(0x1000))) gdt_t gdt[GDT_ENTRIES];
 
 void gdt_init()
 {
@@ -34,7 +33,8 @@ void gdt_set_entry(int entry, uint16_t limit_low, uint32_t base, uint8_t access,
 				   uint8_t limit_flags)
 {
 	if (entry >= GDT_ENTRIES) {
-		klog("Wanted to write entry %i, but GDT has %i entries total.", entry+1, GDT_ENTRIES);
+		klog("Wanted to write entry %i, but GDT has %i entries total.",
+			 entry + 1, GDT_ENTRIES);
 		for (;;) {
 			__asm__("hlt");
 		}

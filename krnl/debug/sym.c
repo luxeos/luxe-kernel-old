@@ -12,6 +12,4 @@
 #include <luxe.h>
 
 __attribute__((weak))
-const symbol_t _symtab[] = {
-	{ .addr = UINTPTR_MAX, "" }
-};
+const symbol_t _symtab[] = { { .addr = UINTPTR_MAX, "" } };

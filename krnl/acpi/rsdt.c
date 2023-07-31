@@ -27,7 +27,7 @@ void rsdt_init(bool use_xsdt)
 		for (uintptr_t i = 0; i < sizeof(xsdt_t); i++) {
 			xsdt_checksum += xsdt_ptr[i];
 		}
-	
+
 		assert((xsdt_checksum & 0xFF) == 0);
 		g_xsdt = (xsdt_t *)(uintptr_t)rsdp->xsdt_addr;
 	} else {

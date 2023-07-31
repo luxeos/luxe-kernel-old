@@ -34,7 +34,8 @@ luxe_status_t uart_init()
 void uart_write(char *str)
 {
 	while (*str) {
-		while ((inb(COM1 + 5) & 0x20) == 0);
+		while ((inb(COM1 + 5) & 0x20) == 0)
+			;
 		outb(COM1, *str++);
 	}
 }
