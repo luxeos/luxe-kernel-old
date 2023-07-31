@@ -35,6 +35,10 @@ void phys_init()
 	for (uint8_t i = 0; i < mmap->entry_count; i++) {
 		struct limine_memmap_entry *entry = mmap->entries[i];
 		klog("entry %i, base: 0x%lx, length: 0x%lx, type: %s", i, entry->base, entry->length, _phys_get_type(entry->type));
+
+		if (entry->type != LIMINE_MEMMAP_USABLE || entry->type != LIMINE_MEMMAP_ACPI_RECLAIMABLE || entry->type != LIMINE_MEMMAP_BOOTLOADER_RECLAIMABLE) {
+			continue;
+		}
 	}
 }
 
