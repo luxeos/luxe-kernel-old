@@ -44,6 +44,10 @@ release_hdd: $(KERNEL) $(SYMFILE)
 run: full_release
 	@$(QEMU) $(QEMUFLAGS)
 
+.PHONY: format
+format:
+	@clang-format -i $(ARCH_C_FILES) $(C_FILES)
+
 .config:
 	@ex/kconfiglib/alldefconfig.py
 	@$(MAKE) krnl/config.h
