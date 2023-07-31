@@ -28,4 +28,29 @@
 
 #include <luxe/luxe_status.h>
 
+#define MAX(a,b) \
+	({__typeof__(a) _a = (a); \
+	  __typeof__(b) _b = (b); \
+	  _a > _b ? _a : _b;})
+
+#define MIN(a,b) \
+	({__typeof__(a) _a = (a); \
+	  __typeof__(b) _b = (b); \
+	  _a < _b ? _a : _b;})
+
+#define ROUND_UP(a,b) \
+	({__typeof__(a) _a = (a); \
+	  __typeof__(b) _b = (b); \
+	  (_a + (_b - 1)) / _b;})
+
+#define ALIGN_UP(a,b) \
+	({__typeof__(a) _a = (a); \
+	  __typeof__(b) _b = (b); \
+	  ROUND_UP(_a, _b) * _b;})
+
+#define ALIGN_DOWN(a,b) \
+	({__typeof__(a) _a = (a); \
+	  __typeof__(b) _b = (b); \
+	  (_a / _b) * _b;})
+
 #endif /* __LUXE_H_ */

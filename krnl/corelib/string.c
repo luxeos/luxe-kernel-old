@@ -11,6 +11,15 @@
 #include <stdint.h>
 #include <string.h>
 
+void *memset(void *dest, int val, uint64_t len)
+{
+	uint8_t *ptr = dest;
+	while (len--) {
+		*ptr++ = (uint8_t)val;
+	}
+	return dest;
+}
+
 int strncmp(const char *s1, const char *s2, size_t n)
 {
 	while (n && *s1 && (*s1 == *s2)) {

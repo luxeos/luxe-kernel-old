@@ -13,6 +13,8 @@
 
 #include <stdint.h>
 
+void *memset(void *dest, int val, uint64_t len);
+
 int strncmp(const char *s1, const char *s2, size_t n);
 
 #endif /* __STRING_H_ */

@@ -39,4 +39,11 @@ static inline uint64_t rdmsr(uint64_t msr)
 	return (((uint64_t)upper << 32) | lower);
 }
 
+static inline uint64_t read_cr2()
+{
+	uint64_t cr2;
+	__asm__ volatile("mov %%cr2, %0" : "=a"(cr2));
+	return cr2;
+}
+
 #endif /* __LUXE_ASM_H_ */
