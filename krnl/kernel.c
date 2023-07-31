@@ -9,6 +9,7 @@
  */
 
 #include <boot/boot.h>
+#include <mem/phys.h>
 #include <luxe.h>
 
 void kernel_init(void)

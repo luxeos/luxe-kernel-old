@@ -24,8 +24,9 @@ void arch_init()
 	gdt_init();
 	idt_init();
 
+	acpi_init();
+
 	phys_init();
 
-	acpi_init();
 	lapic_init();
 }
