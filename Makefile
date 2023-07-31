@@ -72,7 +72,7 @@ $(BUILD_DIR)/%.o: %.asm
 	@$(AS) $(ASFLAGS) $< -o $@
 
 $(SYMFILE): $(OBJ)
-	@printf " GEN $(notdir $@)\n"
+	@printf " GEN  $(notdir $@)\n"
 	@utils/gensym.sh $@
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -x c -c $(SYMFILE) -o $(SYMOBJ)
 	@$(LD) $(LDFLAGS) $(OBJ) $(SYMOBJ) -o $(KERNEL)

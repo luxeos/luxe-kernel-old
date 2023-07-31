@@ -8,12 +8,12 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __IO_H_
-#define __IO_H_
+#ifndef __MMIO_H_
+#define __MMIO_H_
 
 #include <luxe.h>
 
 void mmio_write(uint32_t reg, uint32_t val);
 uint32_t mmio_read(uint32_t reg);
 
-#endif /* __IO_H_ */
+#endif /* __MMIO_H_ */

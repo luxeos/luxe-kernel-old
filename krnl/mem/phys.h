@@ -8,24 +8,15 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <luxe.h>
+#ifndef __PHYS_H_
+#define __PHYS_H_
 
-#include <acpi/acpi.h>
-#include <dd/apic/lapic.h>
-#include <dd/uart/uart.h>
-#include <cpu/gdt.h>
-#include <mem/phys.h>
-#include <int/idt.h>
+void bitmap_set(uint8_t bit);
+void bitmap_clear(uint8_t bit);
+uint8_t bitmap_test(uint8_t bit);
 
-void arch_init()
-{
-	uart_init();
+void phys_init();
 
-	gdt_init();
-	idt_init();
+char *_phys_get_type(uint64_t type);
 
-	phys_init();
-
-	acpi_init();
-	lapic_init();
-}
+#endif /* __PHYS_H_ */
