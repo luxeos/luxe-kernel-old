@@ -55,10 +55,10 @@ uint64_t int_handler(uint64_t rsp)
 
 	if (context->vector <= 0x20) {
 		wizard_show();
-		_klog("Vector 0x%.2x, Error 0x%x\n", context->vector, context->error);
+		_klog("Vector 0x%.2x, Error 0x%x, CR2 0x%x\n", context->vector, context->error, read_cr2());
 		_klog("Stack trace:\n");
 		backtrace();
-		_klog("End of trace. System halted.");
+		_klog("End of trace. System halted.\n");
 
 		for (;;) {
 			__asm__("hlt");
