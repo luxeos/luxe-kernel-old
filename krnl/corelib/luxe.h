@@ -27,6 +27,7 @@
 #endif
 
 #include <luxe/luxe_status.h>
+#include <luxe/luxe_malloc.h>
 
 #define MAX(a,b) \
 	({__typeof__(a) _a = (a); \
