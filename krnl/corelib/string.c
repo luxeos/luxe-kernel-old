@@ -11,13 +11,23 @@
 #include <stdint.h>
 #include <string.h>
 
-void *memset(void *dest, int val, uint64_t len)
+void *memset(void *dest, int val, uint64_t n)
 {
 	uint8_t *ptr = dest;
-	while (len--) {
+	while (n--) {
 		*ptr++ = (uint8_t)val;
 	}
 	return dest;
+}
+
+void memcpy(void *dest, const void *src, size_t n)
+{
+	char *a = (char *)src;
+	char *b = (char *)dest;
+
+	for (size_t i = 0; i < n; i++) {
+		b[i] = a[i];
+	}
 }
 
 int strncmp(const char *s1, const char *s2, size_t n)

@@ -11,13 +11,7 @@
 #ifndef __LUXE_MALLOC_H_
 #define __LUXE_MALLOC_H_
 
-void *kmalloc(uint64_t size);
-void kfree(void *addr);
-void krealloc(void *addr, uint64_t size);
-
-typedef struct {
-	uint64_t blocks;
-	uint64_t size;
-} memalloc_attr_t;
+#include <stddef.h>
+#include <stdint.h>
 
 #endif /* __LUXE_MALLOC_H_ */

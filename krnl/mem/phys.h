@@ -14,23 +14,29 @@
 #include <luxe.h>
 
 #define BLOCK_SIZE 4096
-#define BLOCKS_PER_BYTE 8
+#define BLOCKS_PER_BYTE 64
+
+#define ALIGN_UP(addr, align) (((addr) + (align) - 1) & ~((align) - 1))
+#define ALIGN_DOWN(addr, align) ((addr) & ~((align) - 1))
+
+#define NUM_BLOCKS(size) (((size) * 1024) / BLOCK_SIZE)
+
+#define KERNEL_VIRT_TO_PHYS(addr) (((uint64_t)(addr)) - 0xFFFFFFFF80000000UL)
+#define KERNEL_PHYS_TO_VIRT(addr) (((uint64_t)(addr)) + 0xFFFFFFFF80000000UL)
+#define DATA_VIRT_TO_PHYS(addr) (((uint64_t)(addr)) - hhdm_request.response->offset)
+#define DATA_PHYS_TO_VIRT(addr) (((uint64_t)(addr)) + hhdm_request.response->offset)
 
 void bitmap_set(uint64_t bit);
 void bitmap_clear(uint64_t bit);
-uint8_t bitmap_test(uint64_t bit);
-
-void bitmap_set_range(uint64_t addr, uint64_t blocks);
-void bitmap_clear_range(uint64_t addr, uint64_t blocks);
-uint8_t bitmap_test_range(uint64_t addr, uint64_t blocks);
+uint64_t bitmap_test(uint64_t bit);
 
 void phys_init();
 
-uint64_t phys_alloc(uint64_t addr, uint64_t size);
-void phys_free(uint64_t addr, uint64_t size);
+void *phys_alloc(uint64_t block_num);
+void *phys_allocz(uint64_t block_num);
+void phys_free(void *ptr, size_t block_num);
 
-void _phys_alloc_region(uint64_t base, uint64_t size);
-uint64_t *_phys_alloc_range(uint64_t addr, uint64_t size);
+void *_phys_find_free_range(uint64_t block_num);
 char *_phys_get_type(uint64_t type);
 
 #endif /* __PHYS_H_ */

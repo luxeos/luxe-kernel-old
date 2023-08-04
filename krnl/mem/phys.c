@@ -13,161 +13,136 @@
 #include <luxe.h>
 
 static uint64_t *g_bitmap = NULL;
-static uint64_t g_highest_addr = 0;
 
-static uint64_t g_total_mem = 0;
-static uint64_t g_free_mem = 0;
+uint64_t g_highest_block = 0;
+uint64_t g_used_blocks = 0;
 
 void bitmap_set(uint64_t bit)
 {
-	g_bitmap[bit / (BLOCK_SIZE * BLOCKS_PER_BYTE)] |=
-		(1 << ((bit / BLOCK_SIZE) % BLOCKS_PER_BYTE));
+	g_bitmap[bit / BLOCKS_PER_BYTE] |= (1 << (bit % BLOCKS_PER_BYTE));
 }
 
 void bitmap_clear(uint64_t bit)
 {
-	g_bitmap[bit / (BLOCK_SIZE * BLOCKS_PER_BYTE)] &=
-		~(1 << ((bit / BLOCK_SIZE) % BLOCKS_PER_BYTE));
+	g_bitmap[bit / BLOCKS_PER_BYTE] &= ~(1 << (bit % BLOCKS_PER_BYTE));
 }
 
-uint8_t bitmap_test(uint64_t bit)
+uint64_t bitmap_test(uint64_t bit)
 {
-	return g_bitmap[bit / (BLOCK_SIZE * BLOCKS_PER_BYTE)] &
-		   (1 << ((bit / BLOCK_SIZE) % BLOCKS_PER_BYTE));
-}
-
-void bitmap_set_range(uint64_t addr, uint64_t blocks)
-{
-	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		bitmap_set(i);
-	}
-}
-
-void bitmap_clear_range(uint64_t addr, uint64_t blocks)
-{
-	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		bitmap_clear(i);
-	}
-}
-
-uint8_t bitmap_test_range(uint64_t addr, uint64_t blocks)
-{
-	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		if (!bitmap_test(i)) {
-			return 0;
-		}
-	}
-	return 1;
+	return g_bitmap[bit / BLOCKS_PER_BYTE] & (1 << (bit % BLOCKS_PER_BYTE));
 }
 
 void phys_init()
 {
 	struct limine_memmap_response *mmap = memmap_request.response;
-	struct limine_hhdm_response *hhdm = hhdm_request.response;
 
-	for (size_t i = 0; i < mmap->entry_count; i++) {
+	for (uint64_t i = 0; i < mmap->entry_count; i++) {
 		struct limine_memmap_entry *entry = mmap->entries[i];
 
 		klog("entry %i, base 0x%lx, length 0x%lx, type %s", i, entry->base,
 			 entry->length, _phys_get_type(entry->type));
-
-		if (entry->type == LIMINE_MEMMAP_USABLE ||
-			entry->type == LIMINE_MEMMAP_ACPI_RECLAIMABLE ||
-			entry->type == LIMINE_MEMMAP_BOOTLOADER_RECLAIMABLE ||
-			entry->type == LIMINE_MEMMAP_KERNEL_AND_MODULES) {
-			g_total_mem += entry->length;
-		}
-
-		if ((entry->base + entry->length) > g_highest_addr) {
-			g_highest_addr = entry->base + entry->length;
+		
+		if (entry->type != LIMINE_MEMMAP_USABLE &&
+			entry->type != LIMINE_MEMMAP_BOOTLOADER_RECLAIMABLE &&
+			entry->type != LIMINE_MEMMAP_KERNEL_AND_MODULES) {
+				continue;
+			}
+		
+		if ((entry->base + entry->length) > g_highest_block) {
+			g_highest_block = (entry->base + entry->length);
 		}
 	}
 
-	uint64_t bitmap_size = g_highest_addr / (BLOCK_SIZE * BLOCKS_PER_BYTE);
+	g_used_blocks = NUM_BLOCKS(g_highest_block);
 
-	for (size_t i = 0; i < mmap->entry_count; i++) {
+	uint64_t bitmap_size = ALIGN_UP(ALIGN_DOWN(g_highest_block, BLOCK_SIZE) / BLOCK_SIZE / 8, BLOCK_SIZE);
+
+	// map bitmap
+	for (uint64_t i = 0; i < mmap->entry_count; i++) {
 		struct limine_memmap_entry *entry = mmap->entries[i];
 
 		if (entry->type != LIMINE_MEMMAP_USABLE) {
 			continue;
 		}
 
-		if (entry->base + entry->length <= 0x100000) {
-			continue;
-		}
-
 		if (entry->length >= bitmap_size) {
-			g_bitmap = (uint64_t *)(entry->base + hhdm->offset);
-			memset(g_bitmap, 0, bitmap_size);
-			_phys_alloc_range((uint64_t)entry->base, bitmap_size);
+			g_bitmap = (uint64_t *)DATA_PHYS_TO_VIRT(entry->base);
+			entry->base += bitmap_size;
+			entry->length -= bitmap_size;
 
-			klog("stored bitmap at 0x%lx", g_bitmap);
+			klog("stored bitmap at 0x%lx", entry->base);
 			break;
 		}
 	}
 
-	for (size_t i = 0; i < mmap->entry_count; i++) {
+	memset((void *)g_bitmap, 0xFF, bitmap_size);
+	for (uint64_t i = 0; i < mmap->entry_count; i++) {
 		struct limine_memmap_entry *entry = mmap->entries[i];
 
-		if (entry->base + entry->length <= 0x100000) {
-			continue;
-		}
-
 		if (entry->type == LIMINE_MEMMAP_USABLE) {
-			phys_free(entry->base, entry->length);
-			continue;
+			phys_free((void *)entry->base, entry->length / BLOCK_SIZE);
 		}
 	}
 
-	klog("Total memory: %llu MiB", g_total_mem / 1024 / 1024);
-	klog("Used memory: %llu MiB", (g_total_mem - g_free_mem) / 1024 / 1024);
+	bitmap_set(0);
+	klog("done");
 }
 
-uint64_t phys_alloc(uint64_t addr, uint64_t size)
+void *phys_alloc(uint64_t block_num)
 {
-	klog("size %i, converting to %i blocks", size,
-		 (size + BLOCK_SIZE - 1) / BLOCK_SIZE);
-	uint64_t blocks = (size + BLOCK_SIZE - 1) / BLOCK_SIZE;
-
-	for (uint64_t i = addr; i < g_highest_addr; i += BLOCK_SIZE) {
-		if (_phys_alloc_range(i, blocks) == NULL)
-			continue;
-
-		klog("allocated %i blocks at 0x%lx", blocks, i);
-		return i;
+	if (g_used_blocks <= 0) {
+		// out of memory
+		panic();
 	}
 
-	// out of memory
-	panic();
-	return 0;
-}
-
-void phys_free(uint64_t addr, uint64_t size)
-{
-	uint64_t blocks = (size + BLOCK_SIZE - 1) / BLOCK_SIZE;
-
-	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		if (!bitmap_test_range(i, 1)) {
-			g_free_mem += BLOCK_SIZE;
-		}
-
-		bitmap_set(i);
-	}
-
-	klog("freed %i blocks from 0x%lx", blocks, addr);
-}
-
-uint64_t *_phys_alloc_range(uint64_t addr, uint64_t size)
-{
-	uint64_t blocks = (size + BLOCK_SIZE - 1) / BLOCK_SIZE;
-
-	if (!bitmap_test_range(addr, blocks)) {
+	void *ptr = _phys_find_free_range(block_num);
+	if (ptr == NULL) {
 		return NULL;
 	}
 
-	bitmap_set_range(addr, blocks);
-	g_free_mem -= size;
-	return (uint64_t *)addr;
+	uint64_t index = ((uint64_t)ptr / BLOCK_SIZE);
+	for (uint64_t i = 0; i < block_num; i++) {
+		bitmap_set(index + i);
+	}
+	
+	g_used_blocks += block_num;
+	return (void *)(index * BLOCK_SIZE);
+}
+
+void *phys_allocz(uint64_t block_num)
+{
+	void *ptr = phys_alloc(block_num);
+	memset(ptr, 0, BLOCK_SIZE * block_num);
+
+	return ptr;
+}
+
+void phys_free(void *ptr, size_t block_num)
+{
+	uint64_t index = (uint64_t)ptr / BLOCK_SIZE;
+
+	for (size_t i = 0; i < block_num; i++) {
+		bitmap_clear(index + i);
+	}
+
+	g_used_blocks -= block_num;
+}
+
+void *_phys_find_free_range(uint64_t block_num)
+{
+	for (uint64_t bits = 0; bits < (g_highest_block / BLOCK_SIZE); bits++) {
+		for (uint64_t blocks = 0; blocks < block_num; block_num++) {
+			if (bitmap_test(bits + (blocks / BLOCK_SIZE))) {
+				break;
+			}
+
+			if (blocks == block_num - 1) {
+				return (void *)(bits * BLOCK_SIZE);
+			}
+		}
+	}
+
+	return NULL;
 }
 
 char *_phys_get_type(uint64_t type)
