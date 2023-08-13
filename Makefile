@@ -46,7 +46,7 @@ run: full_release
 
 .PHONY: format
 format:
-	@clang-format -i $(ARCH_C_FILES) $(C_FILES)
+	@clang-format -i $(shell find krnl -name "*.c" -o -name "*.h")
 
 .config:
 	@ex/kconfiglib/alldefconfig.py
