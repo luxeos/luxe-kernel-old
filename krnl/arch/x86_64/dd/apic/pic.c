@@ -25,9 +25,29 @@ void pic_remap()
 	klog("remapped pic at offset 0x20");
 }
 
+void pic_mask(uint8_t irq)
+{
+	uint16_t port;
+	uint8_t value;
+
+	if (irq < 8) {
+		port = PIC1_DATA;
+	} else {
+		port = PIC2_DATA;
+		irq -= 8;
+	}
+	value = inb(port) | (1 << irq);
+	outb(port, value);
+}
+
 void pic_disable()
 {
+	for (int i = 0; i < 16; i++) {
+		pic_mask(i);
+	}
+	klog("masked off irqs 0-15");
+
 	outb(PIC1_DATA, 0xFF);
 	outb(PIC2_DATA, 0xFF);
-	klog("disabled pic");
+	klog("done");
 }

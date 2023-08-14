@@ -11,6 +11,7 @@
 #include <dd/apic/lapic.h>
 #include <dd/apic/pic.h>
 #include <mem/mmio.h>
+#include <mem/virt.h>
 
 #include <luxe.h>
 
