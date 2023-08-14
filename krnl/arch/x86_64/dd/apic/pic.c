@@ -16,8 +16,8 @@ void pic_remap()
 {
 	outb(PIC1_COMD, 0x11);
 	outb(PIC2_COMD, 0x11);
-	outb(PIC1_DATA, 0x20); // offset
-	outb(PIC1_DATA, 0x28); // offset
+	outb(PIC1_DATA, PIC_REMAP_OFFSET);
+	outb(PIC1_DATA, PIC_REMAP_OFFSET + 8);
 	outb(PIC1_DATA, 0x04);
 	outb(PIC2_DATA, 0x02);
 	outb(PIC1_DATA, 0x01);

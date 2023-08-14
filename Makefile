@@ -83,7 +83,6 @@ $(SYMFILE): $(OBJ)
 	@utils/gensym.sh $(KERNEL)
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -x c -c $(SYMFILE) -o $(SYMOBJ)
 	@$(LD) $(LDFLAGS) $(OBJ) $(SYMOBJ) -o $(KERNEL)
-	@$(OBJCOPY) --strip-debug $(KERNEL)
 
 $(KERNEL): $(OBJ)
 	@mkdir -p $(dir $@)

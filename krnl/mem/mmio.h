@@ -13,7 +13,7 @@
 
 #include <luxe.h>
 
-void mmio_write(uint32_t reg, uint32_t val);
-uint32_t mmio_read(uint32_t reg);
+void mmio_write(uintptr_t reg, uint32_t val);
+uint32_t mmio_read(uintptr_t reg);
 
 #endif /* __MMIO_H_ */

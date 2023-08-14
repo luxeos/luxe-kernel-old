@@ -8,26 +8,14 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#ifndef __APIC_H_
+#define __APIC_H_
+
 #include <luxe.h>
 
-#include <acpi/acpi.h>
-#include <dd/apic/apic.h>
-#include <dd/uart/uart.h>
-#include <cpu/gdt.h>
-#include <mem/phys.h>
-#include <mem/virt.h>
-#include <int/idt.h>
+void apic_init();
 
-void arch_init()
-{
-	uart_init();
+void apic_eoi();
+uint8_t apic_get_irq(uint8_t irq);
 
-	gdt_init();
-	idt_init();
-
-	phys_init();
-	virt_init();
-
-	acpi_init();
-	apic_init();
-}
+#endif /* __APIC_H_ */

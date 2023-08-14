@@ -45,11 +45,12 @@ void rsdt_init(bool use_xsdt)
 	}
 
 	// we'll find all sdt's here
-	klog("got here");
 	g_madt = (madt_t *)_rsdt_find_sdt(use_xsdt, "APIC");
 	if (g_madt == NULL) {
 		panic();
 	}
+
+	madt_parse(g_madt);
 }
 
 void *_rsdt_find_sdt(bool use_xsdt, char *signature)

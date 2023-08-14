@@ -87,4 +87,9 @@ static inline void write_cr4(uint64_t value)
 	__asm__ volatile("mov %0, %%cr4" ::"r"(value) : "memory");
 }
 
+static inline void sti()
+{
+	__asm__ volatile("sti");
+}
+
 #endif /* __LUXE_ASM_H_ */

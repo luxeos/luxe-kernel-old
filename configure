@@ -46,7 +46,7 @@ x86_64_cflags="-m64 -march=x86-64 -mno-80387 -mno-mmx -mno-sse -mno-sse2 -mno-re
 x86_64_ldflags="-melf_x86_64"
 x86_64_asflags="-felf64"
 
-x86_64_qemuflags="-M q35 -m 4G -smp 4 -serial stdio -no-reboot -cdrom \$(RELEASE_ISO) -bios aux/ovmf-\$(ARCH).fd"
+x86_64_qemuflags="-M q35,smm=off -d int -D log.txt -m 512M -smp 4 -serial stdio -no-reboot -cdrom \$(RELEASE_ISO) -bios aux/ovmf-\$(ARCH).fd"
 
 ########################################
 ### GENERAL
@@ -100,7 +100,7 @@ make_write "	EFI_BOOTFILE := BOOTX64.EFI"
 make_write "endif"
 make_write ""
 make_write "ifeq (\$(CONFIG_DEBUG),y)"
-make_write "	CFLAGS += -g"
+make_write "	CFLAGS += -g3"
 make_write "	ASFLAGS += -g"
 make_write "	LDFLAGS += -g"
 make_write "endif"

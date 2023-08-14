@@ -8,26 +8,21 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#ifndef __IOAPIC_H_
+#define __IOAPIC_H_
+
 #include <luxe.h>
 
-#include <acpi/acpi.h>
-#include <dd/apic/apic.h>
-#include <dd/uart/uart.h>
-#include <cpu/gdt.h>
-#include <mem/phys.h>
-#include <mem/virt.h>
-#include <int/idt.h>
+#define IOREGSEL 0x00
+#define IOWIN 0x10
 
-void arch_init()
-{
-	uart_init();
+#define IOAPICVER 0x01
+#define IOREDTBL 0x10
 
-	gdt_init();
-	idt_init();
+void ioapic_init();
+void ioapic_set_entry(uint8_t index, uint64_t data);
 
-	phys_init();
-	virt_init();
+uint32_t ioapic_in(uint8_t reg);
+void ioapic_out(uint8_t reg, uint32_t value);
 
-	acpi_init();
-	apic_init();
-}
+#endif /* __IOAPIC_H_ */

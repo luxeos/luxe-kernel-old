@@ -18,6 +18,8 @@
 #define PIC2_COMD 0xA0
 #define PIC2_DATA 0xA1
 
+#define PIC_REMAP_OFFSET 0x20
+
 void pic_remap();
 void pic_mask(uint8_t irq);
 void pic_disable();

@@ -9,6 +9,7 @@
  */
 
 #include <int/idt.h>
+#include <dd/apic/apic.h>
 #include <dd/apic/pic.h>
 #include <cpu/cpu.h>
 #include <panic.h>
@@ -21,7 +22,7 @@ extern uintptr_t int_vector_table[];
 
 void idt_init()
 {
-	for (size_t i = 0; i < 48; i++) {
+	for (size_t i = 0; i < 256; i++) {
 		idt_set_entry(i, (uint64_t)int_vector_table[i], 0x8E);
 	}
 
@@ -30,7 +31,6 @@ void idt_init()
 	idtr_t idtr;
 	idtr.limit = sizeof(idt) - 1;
 	idtr.base = (uint64_t)&idt;
-	(void)idtr;
 	_idt_load(&idtr);
 
 	klog("done");
@@ -53,7 +53,7 @@ uint64_t int_handler(uint64_t rsp)
 {
 	cpu_regs_t *context = (cpu_regs_t *)rsp;
 
-	if (context->vector <= 0x20) {
+	if (context->vector < 0x20) {
 		wizard_show();
 		_klog("Vector 0x%.2x, Error 0x%x, CR2 0x%x\n", context->vector,
 			  context->error, read_cr2());
@@ -64,6 +64,9 @@ uint64_t int_handler(uint64_t rsp)
 		for (;;) {
 			__asm__("hlt");
 		}
+	} else {
+		klog("TICK");
+		apic_eoi();
 	}
 
 	return rsp;

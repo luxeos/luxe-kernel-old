@@ -8,15 +8,9 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <mem/mmio.h>
-#include <luxe.h>
+#ifndef __PIT_H_
+#define __PIT_H_
 
-void mmio_write(uintptr_t reg, uint32_t val)
-{
-	*(volatile uint32_t *)reg = val;
-}
+void pit_tick();
 
-uint32_t mmio_read(uintptr_t reg)
-{
-	return *(volatile uint32_t *)reg;
-}
+#endif /* __PIT_H_ */

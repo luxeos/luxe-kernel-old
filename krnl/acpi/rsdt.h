@@ -41,8 +41,6 @@ typedef struct {
 	uint64_t sdt[];
 } __attribute__((packed)) xsdt_t;
 
-extern madt_t *g_madt;
-
 void rsdt_init(bool use_xsdt);
 
 void *_rsdt_find_sdt(bool use_xsdt, char *signature);

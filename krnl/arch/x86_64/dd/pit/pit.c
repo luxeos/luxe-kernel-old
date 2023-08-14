@@ -8,26 +8,13 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#include <dd/pit/pit.h>
+
 #include <luxe.h>
 
-#include <acpi/acpi.h>
-#include <dd/apic/apic.h>
-#include <dd/uart/uart.h>
-#include <cpu/gdt.h>
-#include <mem/phys.h>
-#include <mem/virt.h>
-#include <int/idt.h>
+static uint64_t g_pit_ticks = 0;
 
-void arch_init()
+void pit_tick()
 {
-	uart_init();
-
-	gdt_init();
-	idt_init();
-
-	phys_init();
-	virt_init();
-
-	acpi_init();
-	apic_init();
+	g_pit_ticks++;
 }

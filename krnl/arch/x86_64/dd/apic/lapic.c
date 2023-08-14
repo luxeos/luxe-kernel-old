@@ -9,17 +9,27 @@
  */
 
 #include <dd/apic/lapic.h>
-#include <dd/apic/pic.h>
+#include <acpi/madt.h>
 #include <mem/mmio.h>
-#include <mem/virt.h>
 
 #include <luxe.h>
 
-uint64_t *lapic_base;
-
 void lapic_init()
 {
-	pic_disable();
+	lapic_out(0x80, 0);
+	lapic_out(0xe0, 0xffffffff);
+	lapic_out(0xd0, 0x01000000);
+	lapic_out(0xf0, 0x100 | 0xff);
 
 	klog("done");
+}
+
+uint32_t lapic_in(uint16_t reg)
+{
+	return mmio_read(get_lapic_addr() + reg);
+}
+
+void lapic_out(uint16_t reg, uint32_t value)
+{
+	mmio_write(get_lapic_addr() + reg, value);
 }
