@@ -14,4 +14,13 @@
 #include <stddef.h>
 #include <stdint.h>
 
+typedef struct {
+	size_t numblocks;
+	size_t size;
+} memory_metadata_t;
+
+void *kmalloc(uint64_t size);
+void kfree(void *addr);
+void *krealloc(void *addr, size_t newsize);
+
 #endif /* __LUXE_MALLOC_H_ */

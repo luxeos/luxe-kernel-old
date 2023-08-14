@@ -10,6 +10,7 @@
 
 #include <acpi/acpi.h>
 #include <acpi/rsdt.h>
+#include <mem/phys.h>
 #include <boot/boot.h>
 #include <luxe.h>
 

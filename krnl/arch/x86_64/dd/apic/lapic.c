@@ -20,7 +20,5 @@ void lapic_init()
 {
 	pic_disable();
 
-	lapic_base = (uint64_t *)rdmsr(IA32_APIC_BASE);
-
-	// klog("apic ver 0x%8x", mmio_read(APIC_REG_VER));
+	klog("done");
 }

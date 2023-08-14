@@ -15,6 +15,7 @@
 #include <dd/uart/uart.h>
 #include <cpu/gdt.h>
 #include <mem/phys.h>
+#include <mem/virt.h>
 #include <int/idt.h>
 
 void arch_init()
@@ -23,8 +24,9 @@ void arch_init()
 
 	gdt_init();
 	idt_init();
-	
+
 	phys_init();
+	virt_init();
 
 	acpi_init();
 	lapic_init();

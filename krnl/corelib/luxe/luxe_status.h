@@ -13,7 +13,7 @@
 
 typedef int luxe_status_t;
 
-#define luxe_success 0	// Function returned successfully
-#define luxe_error -255	// Unknown error
+#define luxe_success 0 // Function returned successfully
+#define luxe_error -255 // Unknown error
 
 #endif /* __LUXE_STATUS_H_ */

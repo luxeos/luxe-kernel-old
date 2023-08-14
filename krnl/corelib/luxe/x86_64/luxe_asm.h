@@ -15,7 +15,7 @@
 
 static inline void outb(uint16_t port, uint8_t value)
 {
-	__asm__ volatile("outb %0, %1" :: "a"(value), "Nd"(port) : "memory");
+	__asm__ volatile("outb %0, %1" ::"a"(value), "Nd"(port) : "memory");
 }
 
 static inline uint8_t inb(uint16_t port)
@@ -29,7 +29,7 @@ static inline void wrmsr(uint64_t msr, uint64_t value)
 {
 	uint32_t lower = value & 0xFFFFFFFF;
 	uint32_t upper = value >> 32;
-	__asm__ volatile("wrmsr" :: "c"(msr), "a"(lower), "d"(upper));
+	__asm__ volatile("wrmsr" ::"c"(msr), "a"(lower), "d"(upper));
 }
 
 static inline uint64_t rdmsr(uint64_t msr)
@@ -41,7 +41,7 @@ static inline uint64_t rdmsr(uint64_t msr)
 
 static inline void invlpg(void *m)
 {
-	__asm__ volatile("invlpg (%0)" :: "b"(m) : "memory");
+	__asm__ volatile("invlpg (%0)" ::"b"(m) : "memory");
 }
 
 static inline uint64_t read_cr0()
@@ -74,17 +74,17 @@ static inline uint64_t read_cr4()
 
 static inline void write_cr0(uint64_t value)
 {
-	__asm__ volatile("mov %0, %%cr0" :: "r"(value));
+	__asm__ volatile("mov %0, %%cr0" ::"r"(value) : "memory");
 }
 
 static inline void write_cr3(uint64_t value)
 {
-	__asm__ volatile("mov %0, %%cr3" :: "r"(value));
+	__asm__ volatile("mov %0, %%cr3" ::"r"(value) : "memory");
 }
 
 static inline void write_cr4(uint64_t value)
 {
-	__asm__ volatile("mov %0, %%cr4" :: "r"(value));
+	__asm__ volatile("mov %0, %%cr4" ::"r"(value) : "memory");
 }
 
 #endif /* __LUXE_ASM_H_ */

@@ -28,15 +28,20 @@
 
 #include <luxe/luxe_status.h>
 #include <luxe/luxe_malloc.h>
+#include <luxe/luxe_vector.h>
 
-#define MAX(a,b) \
-	({__typeof__(a) _a = (a); \
-	  __typeof__(b) _b = (b); \
-	  _a > _b ? _a : _b;})
+#define MAX(a, b)               \
+	({                          \
+		__typeof__(a) _a = (a); \
+		__typeof__(b) _b = (b); \
+		_a > _b ? _a : _b;      \
+	})
 
-#define MIN(a,b) \
-	({__typeof__(a) _a = (a); \
-	  __typeof__(b) _b = (b); \
-	  _a < _b ? _a : _b;})
+#define MIN(a, b)               \
+	({                          \
+		__typeof__(a) _a = (a); \
+		__typeof__(b) _b = (b); \
+		_a < _b ? _a : _b;      \
+	})
 
 #endif /* __LUXE_H_ */

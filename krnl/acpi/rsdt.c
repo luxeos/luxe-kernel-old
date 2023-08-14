@@ -11,6 +11,8 @@
 #include <acpi/acpi.h>
 #include <acpi/rsdt.h>
 #include <acpi/madt.h>
+#include <mem/phys.h>
+
 #include <luxe.h>
 
 xsdt_t *g_xsdt;
@@ -21,7 +23,7 @@ madt_t *g_madt;
 void rsdt_init(bool use_xsdt)
 {
 	if (use_xsdt) {
-		xsdp_t *rsdp = rsdp_request.response->address;
+		xsdp_t *rsdp = (xsdp_t *)rsdp_request.response->address;
 		uint8_t xsdt_checksum = 0;
 		uint8_t *xsdt_ptr = (uint8_t *)rsdp;
 		for (uintptr_t i = 0; i < sizeof(xsdt_t); i++) {
@@ -29,9 +31,9 @@ void rsdt_init(bool use_xsdt)
 		}
 
 		assert((xsdt_checksum & 0xFF) == 0);
-		g_xsdt = (xsdt_t *)(uintptr_t)rsdp->xsdt_addr;
+		g_xsdt = (xsdt_t *)(uintptr_t)PHYS_TO_VIRT(rsdp->xsdt_addr);
 	} else {
-		rsdp_t *rsdp = rsdp_request.response->address;
+		rsdp_t *rsdp = (rsdp_t *)rsdp_request.response->address;
 		uint8_t rsdt_checksum = 0;
 		uint8_t *rsdt_ptr = (uint8_t *)rsdp;
 		for (uintptr_t i = 0; i < sizeof(rsdt_t); i++) {
@@ -39,10 +41,11 @@ void rsdt_init(bool use_xsdt)
 		}
 
 		assert((rsdt_checksum & 0xFF) == 0);
-		g_rsdt = (rsdt_t *)(uintptr_t)rsdp->rsdt_addr;
+		g_rsdt = (rsdt_t *)(uintptr_t)PHYS_TO_VIRT(rsdp->rsdt_addr);
 	}
 
 	// we'll find all sdt's here
+	klog("got here");
 	g_madt = (madt_t *)_rsdt_find_sdt(use_xsdt, "APIC");
 	if (g_madt == NULL) {
 		panic();
@@ -54,7 +57,7 @@ void *_rsdt_find_sdt(bool use_xsdt, char *signature)
 	if (use_xsdt) {
 		int entries = (g_xsdt->header.length - sizeof(g_xsdt->header)) / 8;
 		for (int i = 0; i < entries; i++) {
-			sdt_t *header = (sdt_t *)(uintptr_t)g_xsdt->sdt[i];
+			sdt_t *header = (sdt_t *)(uintptr_t)PHYS_TO_VIRT(g_xsdt->sdt[i]);
 			if (!strncmp(header->signature, signature, 4)) {
 				klog("found header with signature %.4s", header->signature);
 				return (void *)header;
@@ -63,7 +66,7 @@ void *_rsdt_find_sdt(bool use_xsdt, char *signature)
 	} else {
 		int entries = (g_rsdt->header.length - sizeof(g_rsdt->header)) / 4;
 		for (int i = 0; i < entries; i++) {
-			sdt_t *header = (sdt_t *)(uintptr_t)g_rsdt->sdt[i];
+			sdt_t *header = (sdt_t *)(uintptr_t)PHYS_TO_VIRT(g_rsdt->sdt[i]);
 			if (!strncmp(header->signature, signature, 4)) {
 				klog("found header with signature %.4s", header->signature);
 				return (void *)header;

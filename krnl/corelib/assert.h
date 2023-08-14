@@ -14,7 +14,7 @@
 #include <panic.h>
 
 #define assert(expr) \
-	if (!(expr)) \
-		panic()
+	if (!(expr))     \
+	panic()
 
 #endif /* __ASSERT_H_ */
