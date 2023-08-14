@@ -8,8 +8,6 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <boot/boot.h>
-#include <mem/phys.h>
 #include <luxe.h>
 
 void kernel_init(void)
@@ -17,6 +15,7 @@ void kernel_init(void)
 	arch_init();
 
 	klog("Welcome to LuxeOS");
+
 	for (;;)
 		;
 }

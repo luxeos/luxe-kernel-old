@@ -8,20 +8,14 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#ifndef __IRQ_H_
+#define __IRQ_H_
+
 #include <int/idt.h>
-#include <int/irq.h>
-#include <cpu/cpu.h>
 
 #include <luxe.h>
 
-void irq_register(uint8_t irq, interrupt_handler handler)
-{
-	g_int_handlers[irq] = handler;
-	klog("registered handler for irq %i", irq);
-}
+void irq_register(uint8_t irq, interrupt_handler handler);
+void irq_deregister(uint8_t irq);
 
-void irq_deregister(uint8_t irq)
-{
-	g_int_handlers[irq] = NULL;
-	klog("deregistered handler for irq %i", irq);
-}
+#endif /* __IRQ_H_ */

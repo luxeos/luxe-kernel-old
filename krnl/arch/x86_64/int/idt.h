@@ -32,6 +32,10 @@ typedef struct {
 	uint64_t base;
 } __attribute__((packed)) idtr_t;
 
+typedef void (*interrupt_handler)();
+
+extern interrupt_handler g_int_handlers[16];
+
 void idt_init();
 void idt_set_entry(uint8_t vector, uint64_t handler, uint8_t flags);
 

@@ -11,6 +11,8 @@
 #ifndef __PIT_H_
 #define __PIT_H_
 
+#include <luxe.h>
+
 void pit_tick();
 
 #endif /* __PIT_H_ */

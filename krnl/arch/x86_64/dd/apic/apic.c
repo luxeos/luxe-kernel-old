@@ -9,6 +9,7 @@
  */
 
 #include <acpi/madt.h>
+#include <int/irq.h>
 #include <dd/apic/apic.h>
 #include <dd/apic/lapic.h>
 #include <dd/apic/ioapic.h>
@@ -18,6 +19,8 @@
 #include <mem/mmio.h>
 #include <mem/phys.h>
 #include <mem/virt.h>
+
+#include <luxe.h>
 
 void apic_init()
 {
@@ -38,6 +41,9 @@ void apic_init()
 
 	// enable irqs
 	ioapic_set_entry(apic_get_irq(0), PIC_REMAP_OFFSET);
+
+	// register handlers
+	irq_register(0, pit_tick);
 
 	sti();
 	klog("done");

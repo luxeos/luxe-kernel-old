@@ -17,6 +17,7 @@
 #include <luxe.h>
 
 idt_t idt[IDT_MAX_ENTRIES];
+interrupt_handler g_int_handlers[16];
 
 extern uintptr_t int_vector_table[];
 
@@ -24,6 +25,10 @@ void idt_init()
 {
 	for (size_t i = 0; i < 256; i++) {
 		idt_set_entry(i, (uint64_t)int_vector_table[i], 0x8E);
+	}
+
+	for (size_t i = 0; i < 16; i++) {
+		g_int_handlers[i] = NULL;
 	}
 
 	pic_remap();
@@ -64,8 +69,11 @@ void int_handler(uint64_t rsp)
 		for (;;) {
 			__asm__("hlt");
 		}
-	} else {
-		klog("TICK");
+	} else if (context->vector < 0x30) {
+		uint8_t irq = context->vector - 0x20;
+		if (g_int_handlers[irq] != NULL) {
+			g_int_handlers[irq]();
+		}
 		apic_eoi();
 	}
 }
