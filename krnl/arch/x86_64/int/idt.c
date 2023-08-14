@@ -49,7 +49,7 @@ void idt_set_entry(uint8_t vector, uint64_t handler, uint8_t flags)
 	entry->reserved = 0;
 }
 
-uint64_t int_handler(uint64_t rsp)
+void int_handler(uint64_t rsp)
 {
 	cpu_regs_t *context = (cpu_regs_t *)rsp;
 
@@ -68,6 +68,4 @@ uint64_t int_handler(uint64_t rsp)
 		klog("TICK");
 		apic_eoi();
 	}
-
-	return rsp;
 }

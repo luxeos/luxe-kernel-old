@@ -17,10 +17,10 @@ int_stub:
 	pushaq
 	cld
 	mov rdi, rsp
+	push 0 ; stack alignment
 	call int_handler
-	mov rsp, rax
 	popaq
-	add rsp, 8
+	add rsp, 24
 	iretq
 
 %macro vector_error 1

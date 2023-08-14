@@ -35,7 +35,7 @@ typedef struct {
 void idt_init();
 void idt_set_entry(uint8_t vector, uint64_t handler, uint8_t flags);
 
-uint64_t int_handler(uint64_t rsp);
+void int_handler(uint64_t rsp);
 
 extern void _idt_load(idtr_t *idtr);
 
