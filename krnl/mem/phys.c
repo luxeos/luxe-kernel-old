@@ -54,6 +54,9 @@ void phys_init()
 	for (size_t i = 0; i < mmap->entry_count; i++) {
 		struct limine_memmap_entry *entry = mmap->entries[i];
 
+		klog("entry %i base 0x%llx, length %llu, type %s", i, entry->base,
+			 entry->length, _phys_get_type(entry->type));
+
 		if (entry->type == LIMINE_MEMMAP_RESERVED) {
 			continue;
 		}
@@ -69,8 +72,6 @@ void phys_init()
 
 		if (new_limit > g_highest_block) {
 			g_highest_block = new_limit;
-			klog("entry %i base 0x%llx, length %llu, type %s", i, entry->base,
-				 entry->length, _phys_get_type(entry->type));
 		}
 	}
 

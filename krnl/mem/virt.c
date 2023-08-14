@@ -60,6 +60,7 @@ void virt_init()
 					 VIRT_FLAGS_DEFAULT | VIRT_FLAGS_USERMODE, true);
 			klog("mapped 0x%llx -> 0x%llx", entry->base,
 				 PHYS_TO_VIRT(entry->base));
+			break;
 		}
 		}
 	}
