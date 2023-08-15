@@ -18,3 +18,11 @@ void pit_tick()
 {
 	g_pit_ticks++;
 }
+
+void pit_delay(uint32_t ms)
+{
+	uint32_t now = g_pit_ticks;
+	ms++;
+	while (g_pit_ticks - now < ms)
+		;
+}
