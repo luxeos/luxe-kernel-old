@@ -14,6 +14,5 @@
 #include <luxe.h>
 
 void pit_tick();
-void pit_delay(uint32_t ms);
 
 #endif /* __PIT_H_ */

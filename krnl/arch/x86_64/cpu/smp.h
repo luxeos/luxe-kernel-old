@@ -8,13 +8,9 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <dd/pit/pit.h>
+#ifndef __SMP_H_ 
+#define __SMP_H_ 
 
-#include <luxe.h>
+void smp_init();
 
-static uint64_t g_pit_ticks = 0;
-
-void pit_tick()
-{
-	g_pit_ticks++;
-}
+#endif /* __SMP_H_ */

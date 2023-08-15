@@ -99,3 +99,13 @@ apic_iso_t *get_ioapic_iso(uint8_t irq)
 {
 	return g_apic_isos[irq];
 }
+
+uint64_t get_cpu_count()
+{
+	return g_lapic_count;
+}
+
+uint8_t get_cpu_id(uint64_t num)
+{
+	return g_lapic_ids[num]->apic_id;
+}

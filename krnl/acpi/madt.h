@@ -81,4 +81,7 @@ uint64_t get_ioapic_addr();
 uint64_t get_lapic_addr();
 apic_iso_t *get_ioapic_iso(uint8_t irq);
 
+uint64_t get_cpu_count();
+uint8_t get_cpu_id(uint64_t num);
+
 #endif /* __MADT_H_ */
