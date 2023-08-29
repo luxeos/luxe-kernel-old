@@ -29,8 +29,6 @@ fi
 
 make -C ex/limine
 
-chmod +x utils/gensym.sh
-
 ########################################
 ### MODIFIABLE
 ########################################
@@ -79,9 +77,6 @@ make_write "GIT_REVISION := \$(shell git rev-parse --short HEAD)"
 make_write ""
 make_write "BUILD_DIR := $build_dir"
 make_write "KERNEL := \$(BUILD_DIR)/krnl.sys"
-make_write ""
-make_write "SYMFILE := krnl/debug/_symtbl.map"
-make_write "SYMOBJ := \$(BUILD_DIR)/krnl/debug/_symtbl.o"
 make_write ""
 make_write "RELEASE_DIR := $release_dir"
 make_write "RELEASE_ISO := \$(RELEASE_DIR)/luxe-cd-\$(GIT_REVISION)_\$(ARCH).iso"

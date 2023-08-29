@@ -12,7 +12,7 @@
 
 #include <luxe.h>
 
-luxe_status_t uart_init()
+void uart_init()
 {
 	outb(COM1 + 1, 0x00);
 
@@ -27,8 +27,6 @@ luxe_status_t uart_init()
 	outb(COM1 + 2, 0xC7);
 	outb(COM1 + 4, 0x0B);
 	outb(COM1 + 4, 0x0F);
-
-	return luxe_success;
 }
 
 void uart_write(char *str)

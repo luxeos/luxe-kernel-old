@@ -8,29 +8,11 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <luxe.h>
-
-#include <acpi/acpi.h>
-#include <dd/apic/apic.h>
 #include <dd/uart/uart.h>
-#include <cpu/gdt.h>
-#include <cpu/smp.h>
-#include <mem/phys.h>
-#include <mem/virt.h>
-#include <int/idt.h>
+
+#include <luxe.h>
 
 void arch_init()
 {
 	uart_init();
-
-	gdt_init();
-	idt_init();
-
-	phys_init();
-	virt_init();
-
-	acpi_init();
-	apic_init();
-
-	smp_init();
 }

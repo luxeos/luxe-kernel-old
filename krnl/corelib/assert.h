@@ -11,10 +11,9 @@
 #ifndef __ASSERT_H_
 #define __ASSERT_H_
 
-#include <panic.h>
-
 #define assert(expr) \
-	if (!(expr))     \
-	panic()
+	if (!(expr)) {   \
+	}
+// panic("assert failed on %s:%s", __FILE__, __func__);
 
 #endif /* __ASSERT_H_ */

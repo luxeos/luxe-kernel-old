@@ -26,10 +26,6 @@
 #include <luxe/x86_64/luxe_asm.h>
 #endif
 
-#include <luxe/luxe_status.h>
-#include <luxe/luxe_malloc.h>
-#include <luxe/luxe_vector.h>
-
 #define MAX(a, b)               \
 	({                          \
 		__typeof__(a) _a = (a); \

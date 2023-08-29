@@ -15,7 +15,6 @@ ENTRY(kernel_init)
 
 PHDRS
 {
-	null PT_NULL FLAGS(0);
 	text PT_LOAD FLAGS((1 << 0) | (1 << 2));
 	rodata PT_LOAD FLAGS((1 << 2));
 	data PT_LOAD FLAGS((1 << 1) | (1 << 2));

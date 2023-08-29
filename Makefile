@@ -19,7 +19,7 @@ all: full_release
 full_release: release_iso release_hdd
 
 .PHONY: release_iso
-release_iso: $(KERNEL) $(SYMFILE)
+release_iso: $(KERNEL)
 	@printf " GEN  $(notdir $(RELEASE_ISO))\n"
 	@mkdir -p $(RELEASE_DIR)
 	@mkdir -p iso_tmp/EFI/BOOT
@@ -29,7 +29,7 @@ release_iso: $(KERNEL) $(SYMFILE)
 	@rm -rf iso_tmp
 
 .PHONY: release_hdd
-release_hdd: $(KERNEL) $(SYMFILE)
+release_hdd: $(KERNEL)
 	@printf " GEN  $(notdir $(RELEASE_HDD))\n"
 	@mkdir -p $(RELEASE_DIR)
 	@dd if=/dev/zero of=$(RELEASE_HDD) bs=1M count=32 &>/dev/null
@@ -75,15 +75,6 @@ $(BUILD_DIR)/%.o: %.asm
 	@printf " AS   $^\n"
 	@$(AS) $(ASFLAGS) $< -o $@
 
-$(SYMFILE): $(OBJ)
-	@printf " GEN  $(notdir $@)\n"
-	@utils/gensym.sh $@
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -x c -c $(SYMFILE) -o $(SYMOBJ)
-	@$(LD) $(LDFLAGS) $(OBJ) $(SYMOBJ) -o $(KERNEL)
-	@utils/gensym.sh $(KERNEL)
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -x c -c $(SYMFILE) -o $(SYMOBJ)
-	@$(LD) $(LDFLAGS) $(OBJ) $(SYMOBJ) -o $(KERNEL)
-
 $(KERNEL): $(OBJ)
 	@mkdir -p $(dir $@)
 	@printf " LD   $@\n"
@@ -93,11 +84,9 @@ $(KERNEL): $(OBJ)
 clean:
 	@printf " CLEAN\n"
 	@rm -rf $(BUILD_DIR) $(RELEASE_DIR) .config.old
-	@rm -rf $(SYMFILE)
 
 .PHONY: distclean
 distclean:
 	@printf " DISTCLEAN\n"
 	@rm -rf $(BUILD_DIR) $(RELEASE_DIR)
-	@rm -rf $(SYMFILE)
 	@rm -rf Makefile.in .config .config.old krnl/config.h
