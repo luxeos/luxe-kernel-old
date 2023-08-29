@@ -16,6 +16,9 @@ function make_write {
 
 ## TODO: Allow to configure custom build and release directories
 
+# Make sure utils are executable
+chmod +x utils/printbuildtime.sh
+
 # Download submodules
 git submodule update --init 1> /dev/null
 
@@ -117,3 +120,5 @@ make_write "C_FILES := \$(shell find krnl -name "*.c" -not -path \"*/arch/*\" -n
 make_write "AS_FILES := \$(shell find krnl -name "*.asm" -not -path \"*/arch/*\" -not -path \"krnl/corelib/luxe/x86_64\" -type f)"
 make_write ""
 make_write "OBJ := \$(C_FILES:%.c=\$(BUILD_DIR)/%.o) \$(ARCH_C_FILES:%.c=\$(BUILD_DIR)/%.o) \$(AS_FILES:%.asm=\$(BUILD_DIR)/%.o) \$(ARCH_AS_FILES:%.asm=\$(BUILD_DIR)/%.o)"
+make_write ""
+make_write "BUILD_START_TIME := \$(shell date +%s)"

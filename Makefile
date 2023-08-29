@@ -9,11 +9,14 @@
 #
 #
 
+override MAKEFLAGS += -Rr
+
 include .config
 include Makefile.in
 
 .PHONY: all
 all: full_release
+	@utils/printbuildtime.sh $(BUILD_START_TIME)
 
 .PHONY: full_release
 full_release: release_iso release_hdd
