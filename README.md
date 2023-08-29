@@ -1,5 +1,7 @@
 # LuxeOS
 
+This project is currently being rewritten in the [rewrite](https://github.com/schkwve/luxe/tree/rewrite) branch.
+
 ## Building & Running
 
 After cloning this repo, run `./configure` to automatically generate a Makefile.
