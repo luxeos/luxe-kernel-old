@@ -8,16 +8,14 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <cpu/gdt.h>
+#ifndef __IRQ_H_
+#define __IRQ_H_
+
 #include <int/idt.h>
-#include <dd/uart/uart.h>
 
 #include <luxe.h>
 
-void arch_init()
-{
-	uart_init();
+void irq_register(uint8_t irq, interrupt_handler handler);
+void irq_deregister(uint8_t irq);
 
-	gdt_init();
-	idt_init();
-}
+#endif /* __IRQ_H_ */

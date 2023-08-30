@@ -8,16 +8,19 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <cpu/gdt.h>
 #include <int/idt.h>
-#include <dd/uart/uart.h>
+#include <int/irq.h>
 
 #include <luxe.h>
 
-void arch_init()
+void irq_register(uint8_t irq, interrupt_handler handler)
 {
-	uart_init();
+	g_int_handlers[irq] = handler;
+	klog("registered handler for irq %i", irq);
+}
 
-	gdt_init();
-	idt_init();
+void irq_deregister(uint8_t irq)
+{
+	g_int_handlers[irq] = NULL;
+	klog("deregistered handler for irq %i", irq);
 }
