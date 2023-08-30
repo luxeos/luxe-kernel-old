@@ -9,7 +9,6 @@
  */
 
 #include <cpu/gdt.h>
-
 #include <dd/uart/uart.h>
 
 #include <luxe.h>
