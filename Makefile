@@ -82,6 +82,9 @@ $(KERNEL): $(OBJ)
 	@mkdir -p $(dir $@)
 	@printf " LD   $@\n"
 	@$(LD) $(OBJ) $(LDFLAGS) -o $@
+ifeq ($(CONFIG_RELEASE),y)
+	@$(OBJCOPY) --strip-debug $(KERNEL)
+endif
 
 .PHONY: clean
 clean:
