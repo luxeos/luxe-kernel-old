@@ -8,16 +8,14 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <luxe.h>
+#ifndef __LUXE_VERSION_H_
+#define __LUXE_VERSION_H_
 
-void kernel_init(void)
-{
-	arch_init();
+#include <config.h>
 
-	klog("Welcome to LuxeOS");
+extern char *g_luxeos_rel_str;
+extern char *g_kernel_ver_str;
+extern char *g_kernel_configuration_str;
+extern char *g_kernel_arch_str;
 
-	__asm__ volatile("int $0x01");
-
-	for (;;)
-		;
-}
+#endif /* __LUXE_VERSION_H_ */

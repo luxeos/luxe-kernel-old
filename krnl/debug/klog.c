@@ -16,7 +16,7 @@
 void _klog(char *fmt, ...)
 {
 #ifndef CONFIG_DEBUG
-	(void *)fmt;
+	(void)fmt;
 #else
 	va_list ptr;
 	char klog_buffer[4096];

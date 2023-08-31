@@ -8,6 +8,7 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#include <dd/pic/pic.h>
 #include <int/idt.h>
 
 #include <luxe.h>
@@ -20,12 +21,15 @@ extern uint64_t isr_tbl[];
 void idt_init()
 {
 	for (size_t i = 0; i < IDT_MAX_ENTRIES; i++) {
-		idt_set_entry(i, (uint64_t)isr_tbl[i], IDT_INT_GATE);
+		idt_set_entry(i, isr_tbl[i], IDT_INT_GATE);
 	}
+	idt_set_entry(255, isr_tbl[255], IDT_TRAP_GATE);
 
 	for (size_t i = 0; i < 16; i++) {
 		g_int_handlers[i] = NULL;
 	}
+
+	pic_init();
 
 	idtr_t idtr;
 	idtr.size = sizeof(idt) - 1;
@@ -45,9 +49,4 @@ void idt_set_entry(uint8_t vector, uint64_t handler, uint8_t flags)
 	entry->base_mid = (handler >> 16) & 0xffff;
 	entry->base_hi = handler >> 32;
 	entry->reserved = 0;
-}
-
-void int_handler(int_frame_t frame)
-{
-	(void)frame;
 }

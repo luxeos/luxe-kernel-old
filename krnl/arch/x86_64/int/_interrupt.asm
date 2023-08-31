@@ -11,12 +11,12 @@
 
 %include "krnl/arch/x86_64/_utils.asm"
 
-extern int_handler
+extern excp_handler
 
 _int_stub:
 	pushaq
 	cld
-	call int_handler
+	call excp_handler
 	popaq
 	add rsp, 16
 	iretq
@@ -85,7 +85,6 @@ _isr_noerr 44
 _isr_noerr 45
 _isr_noerr 46
 _isr_noerr 47
-
 _isr_noerr 48
 _isr_noerr 49
 _isr_noerr 50

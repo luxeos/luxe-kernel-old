@@ -16,10 +16,14 @@ menu "CPU"
 		Maximum number of supported CPUs.
 endmenu
 
-menu "Debug"
+choice BUILD_TYPE
+	bool "Build Type"
 	config DEBUG
-		bool "Enable Debug mode"
-		default y
+		bool "Debug"
 		---help---
-		Enables debugging support.
-endmenu
+		Stripped debug information, serial logging and verbose mode are disabled by default.
+	config RELEASE
+		bool "Release"
+		---help---
+		Debug information is kept in the kernel binary, serial logging and verbose mode are enabled.
+endchoice

@@ -53,7 +53,7 @@ x86_64_qemuflags="-M q35 -m 512M -smp 4 -serial stdio -no-reboot -cdrom \$(RELEA
 ### GENERAL
 ########################################
 
-cflags="-Wall -Wextra -Werror -std=c99 -ffreestanding -fno-stack-protector -fno-stack-check -fno-omit-frame-pointer -fno-lto -fPIE"
+cflags="-D__GIT_REV__='\"\$(GIT_REVISION)\"' -Wall -Wextra -Werror -std=c99 -ffreestanding -fno-stack-protector -fno-stack-check -fno-omit-frame-pointer -fno-lto -fPIE"
 cppflags="\$(INCDIR:%=-I%) -MMD -MP"
 ldflags="-nostdlib -static -pie --no-dynamic-linker -ztext -zmax-page-size=0x1000 -T aux/linker-\$(ARCH).ld"
 

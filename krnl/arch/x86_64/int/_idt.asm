@@ -12,6 +12,5 @@
 global _idt_load
 _idt_load:
 	lidt [rdi]
-	; we don't sti yet
-	; @todo remap pic
+	sti
 	ret
