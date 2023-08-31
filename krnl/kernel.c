@@ -16,8 +16,6 @@ void kernel_init(void)
 
 	klog("Welcome to LuxeOS");
 
-	__asm__ volatile("int $0x01");
-
 	for (;;)
 		;
 }

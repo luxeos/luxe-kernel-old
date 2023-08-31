@@ -11,6 +11,7 @@
 #include <cpu/gdt.h>
 #include <int/idt.h>
 #include <dd/uart/uart.h>
+#include <mem/phys.h>
 
 #include <luxe.h>
 
@@ -20,4 +21,6 @@ void arch_init()
 
 	gdt_init();
 	idt_init();
+
+	phys_init();
 }
