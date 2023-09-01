@@ -12,6 +12,7 @@
 #include <int/idt.h>
 #include <dd/uart/uart.h>
 #include <mem/phys.h>
+#include <mem/virt.h>
 
 #include <luxe.h>
 
@@ -23,4 +24,5 @@ void arch_init()
 	idt_init();
 
 	phys_init();
+	virt_init();
 }

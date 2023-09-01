@@ -11,6 +11,8 @@
 #ifndef __PHYS_H_
 #define __PHYS_H_
 
+#include <mem/virt.h>
+
 #include <luxe.h>
 
 #define BLOCK_SIZE 0x1000
@@ -18,9 +20,8 @@
 
 #define NUM_BLOCKS(num) (((num) + BLOCK_SIZE - 1) / BLOCK_SIZE)
 
-#define MEM_VIRT_OFF hhdm_request.response->offset
-#define VIRT_TO_PHYS(a) ((uint64_t)(a)-MEM_VIRT_OFF)
-#define PHYS_TO_VIRT(a) ((uint64_t)(a) + MEM_VIRT_OFF)
+#define VIRT_TO_PHYS(addr) ((uint64_t)(addr)-MEM_VIRT_OFF)
+#define PHYS_TO_VIRT(addr) ((uint64_t)(addr) + MEM_VIRT_OFF)
 
 void bitmap_set(uint64_t addr, uint64_t blocks);
 void bitmap_clear(uint64_t addr, uint64_t blocks);
@@ -33,6 +34,7 @@ void phys_free(uint64_t addr, uint64_t blocks);
 
 uint64_t phys_get_total_memory();
 uint64_t phys_get_free_memory();
+uint64_t phys_get_highest_block();
 
 bool _phys_is_addr_free(uint64_t addr, uint64_t blocks);
 char *_phys_get_type(uint64_t type);

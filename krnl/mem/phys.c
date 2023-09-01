@@ -22,28 +22,28 @@ uint64_t *g_bitmap = NULL;
 void bitmap_set(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BYTE)] |=
-			1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BYTE);
+		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BYTE)] &=
+			~((1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BYTE)));
 	}
 }
 
 void bitmap_clear(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BYTE)] &=
-			~((1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BYTE)));
+		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BYTE)] |=
+			1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BYTE);
 	}
 }
 
 bool bitmap_test(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		if ((g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BYTE)] &
-			 (1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BYTE)))) {
-			return true;
+		if (!(g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BYTE)] &
+			  (1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BYTE)))) {
+			return false;
 		}
 	}
-	return false;
+	return true;
 }
 
 void phys_init()
@@ -142,6 +142,11 @@ uint64_t phys_get_total_memory()
 uint64_t phys_get_free_memory()
 {
 	return g_free_size;
+}
+
+uint64_t phys_get_highest_block()
+{
+	return g_highest_block;
 }
 
 bool _phys_is_addr_free(uint64_t addr, uint64_t blocks)
