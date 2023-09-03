@@ -8,6 +8,7 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#include <acpi/acpi.h>
 #include <boot/bootlogo.h>
 #include <cpu/gdt.h>
 #include <int/idt.h>
@@ -30,4 +31,6 @@ void arch_init()
 
 	phys_init();
 	virt_init();
+
+	acpi_init();
 }

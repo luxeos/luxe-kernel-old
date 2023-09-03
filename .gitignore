@@ -1,4 +1,5 @@
 .vscode/
+aux/limine.cfg
 build/
 release/
 
