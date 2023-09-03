@@ -16,7 +16,7 @@
 #include <luxe.h>
 
 #define BLOCK_SIZE 0x1000
-#define BLOCKS_PER_BYTE 64
+#define BLOCKS_PER_BITMAP 8
 
 #define NUM_BLOCKS(num) (((num) + BLOCK_SIZE - 1) / BLOCK_SIZE)
 
@@ -36,7 +36,6 @@ uint64_t phys_get_total_memory();
 uint64_t phys_get_free_memory();
 uint64_t phys_get_highest_block();
 
-bool _phys_is_addr_free(uint64_t addr, uint64_t blocks);
 char *_phys_get_type(uint64_t type);
 
 #endif /* __PHYS_H_ */
