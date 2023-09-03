@@ -12,10 +12,10 @@
 #define __LOGO_H_
 
 static const struct {
-	unsigned int width;
-	unsigned int height;
-	unsigned int bytes_per_pixel;
-	unsigned char pixel_data[315 * 65 * 4 + 1];
+	uint32_t width;
+	uint32_t height;
+	uint32_t bytes_per_pixel;
+	uint8_t pixel_data[315 * 65 * 4 + 1];
 } luxeos_logo = {
 	315,
 	65,

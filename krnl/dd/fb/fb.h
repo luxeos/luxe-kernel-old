@@ -8,26 +8,22 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <boot/bootlogo.h>
-#include <cpu/gdt.h>
-#include <int/idt.h>
-#include <dd/uart/uart.h>
-#include <dd/fb/fb.h>
-#include <mem/phys.h>
-#include <mem/virt.h>
+#ifndef __FB_H_
+#define __FB_H_
 
 #include <luxe.h>
 
-void arch_init()
-{
-	uart_init();
+typedef struct {
+	uint32_t *addr;
+	uint64_t width;
+	uint64_t height;
+	uint64_t pitch;
+	uint16_t bpp;
+} fb_info_t;
 
-	gdt_init();
-	idt_init();
+extern fb_info_t g_fb_info;
 
-	fb_init();
-	display_bootlogo();
+void fb_init();
+void putpixel(int x, int y, uint32_t color);
 
-	phys_init();
-	virt_init();
-}
+#endif /* __FB_H_ */
