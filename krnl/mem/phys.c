@@ -50,10 +50,6 @@ void phys_init()
 {
 	struct limine_memmap_response *mmap = memmap_request.response;
 
-	g_free_size = 0;
-	g_total_size = 0;
-	g_highest_block = 0;
-
 	for (size_t i = 0; i < mmap->entry_count; i++) {
 		struct limine_memmap_entry *entry = mmap->entries[i];
 
@@ -113,9 +109,8 @@ void phys_init()
 void phys_free(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		if (!bitmap_test(i, 1)) {
+		if (!bitmap_test(i, 1))
 			g_free_size += BLOCK_SIZE;
-		}
 
 		bitmap_clear(i, 1);
 	}
@@ -130,6 +125,10 @@ uint64_t phys_alloc(uint64_t base, uint64_t blocks)
 	}
 
 	// out of memory
+	_klog("out of memory");
+	for (;;) {
+		__asm__ volatile("hlt");
+	}
 	// panic();
 	return 0;
 }

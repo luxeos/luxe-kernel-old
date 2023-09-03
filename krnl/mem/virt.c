@@ -28,9 +28,8 @@ void virt_init()
 	memset(g_kern_ads.pml4, 0, 8 * BLOCK_SIZE);
 
 	virt_map(NULL, MEM_VIRT_OFF, 0, NUM_BLOCKS(phys_get_highest_block()),
-			 VIRT_FLAGS_DEFAULT | VIRT_FLAGS_USERMODE, true);
-	klog("mapped %d bytes memory to 0x%llx", phys_get_highest_block(),
-		 MEM_VIRT_OFF);
+			 VIRT_FLAGS_DEFAULT);
+	klog("mapped %llx -> 0x%llx", phys_get_highest_block(), MEM_VIRT_OFF);
 
 	for (size_t i = 0; i < mmap->entry_count; i++) {
 		struct limine_memmap_entry *entry = mmap->entries[i];
@@ -40,7 +39,7 @@ void virt_init()
 			uint64_t virt_addr = kernel_addr->virtual_base + entry->base -
 								 kernel_addr->physical_base;
 			virt_map(NULL, virt_addr, entry->base, NUM_BLOCKS(entry->length),
-					 VIRT_FLAGS_DEFAULT | VIRT_FLAGS_USERMODE, true);
+					 VIRT_FLAGS_DEFAULT);
 			klog("mapped kernel 0x%llx -> 0x%llx", entry->base, virt_addr,
 				 entry->length);
 			break;
@@ -48,16 +47,19 @@ void virt_init()
 		case LIMINE_MEMMAP_FRAMEBUFFER: {
 			virt_map(NULL, PHYS_TO_VIRT(entry->base), entry->base,
 					 NUM_BLOCKS(entry->length),
-					 VIRT_FLAGS_DEFAULT | VIRT_FLAG_WCOMB | VIRT_FLAGS_USERMODE,
-					 true);
+					 VIRT_FLAGS_DEFAULT | VIRT_FLAG_WCOMB);
 			klog("mapped framebuffer 0x%llx -> 0x%llx", entry->base,
 				 PHYS_TO_VIRT(entry->base));
+			break;
+		}
+		case LIMINE_MEMMAP_RESERVED: {
+			klog("refusing to map reserved memory at 0x%llx", entry->base);
 			break;
 		}
 		default: {
 			virt_map(NULL, PHYS_TO_VIRT(entry->base), entry->base,
 					 NUM_BLOCKS(entry->length),
-					 VIRT_FLAGS_DEFAULT | VIRT_FLAGS_USERMODE, true);
+					 VIRT_FLAGS_DEFAULT | VIRT_FLAGS_USERMODE);
 			klog("mapped 0x%llx -> 0x%llx", entry->base,
 				 PHYS_TO_VIRT(entry->base));
 			break;
@@ -65,14 +67,16 @@ void virt_init()
 		}
 	}
 
+	klog("replacing cr3 0x%llx with new value 0x%llx", read_cr3(),
+		 VIRT_TO_PHYS(g_kern_ads.pml4));
 	write_cr3(VIRT_TO_PHYS(g_kern_ads.pml4));
 	klog("done");
 }
 
 void virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
-			  uint64_t np, uint64_t flags, bool us)
+			  uint64_t np, uint64_t flags)
 {
-	if (us && (ads == NULL)) {
+	if (ads == NULL) {
 		mem_map_t mm = { virt_addr, phys_addr, flags, np };
 		vector_pushback(&mmap_list, mm);
 	}
@@ -82,9 +86,9 @@ void virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
 	}
 }
 
-void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np, bool us)
+void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np)
 {
-	if (us && (ads == NULL)) {
+	if (ads == NULL) {
 		size_t len = vector_length(&mmap_list);
 		for (size_t i = 0; i < len; i++) {
 			mem_map_t m = vector_at(&mmap_list, i);
@@ -117,7 +121,7 @@ addr_space_t *create_ads()
 	size_t len = vector_length(&mmap_list);
 	for (size_t i = 0; i < len; i++) {
 		mem_map_t m = vector_at(&mmap_list, i);
-		virt_map(as, m.virt_addr, m.phys_addr, m.np, m.flags, false);
+		virt_map(as, m.virt_addr, m.phys_addr, m.np, m.flags);
 	}
 
 	return as;

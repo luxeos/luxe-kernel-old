@@ -11,6 +11,8 @@
 #ifndef __VIRT_H_
 #define __VIRT_H_
 
+#include <boot/boot.h>
+
 #include <luxe.h>
 
 #define MEM_VIRT_OFF hhdm_request.response->offset
@@ -41,8 +43,8 @@ typedef struct {
 void virt_init();
 
 void virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
-			  uint64_t np, uint64_t flags, bool us);
-void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np, bool us);
+			  uint64_t np, uint64_t flags);
+void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np);
 
 addr_space_t *create_ads();
 

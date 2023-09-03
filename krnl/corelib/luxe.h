@@ -22,6 +22,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include <luxe/luxe_malloc.h>
+#include <luxe/luxe_vector.h>
 #include <luxe/luxe_version.h>
 
 #if defined(CONFIG_X86_64)
