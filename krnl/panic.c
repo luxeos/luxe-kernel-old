@@ -14,13 +14,13 @@
 
 // clang-format off
 char *g_error_msg[] = {
-	"error this",
-	"error that"
+	"Out of Physical Memory",
+	"Assertion Failed"
 };
 
 char *g_error_name[] = {
-	"ERR_THIS",
-	"ERR_THAT"
+	"PHYS_MM_OUT_OF_MEMORY",
+	"ASSERT_FAILED"
 };
 // clang-format on
 

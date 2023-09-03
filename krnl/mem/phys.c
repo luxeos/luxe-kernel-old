@@ -134,14 +134,8 @@ uint64_t phys_alloc(uint64_t base, uint64_t blocks)
 		}
 	}
 
-	// @todo: write panic()
-	// out of memory
-	_klog("out of memory");
-	for (;;) {
-		__asm__ volatile("hlt");
-	}
-	// panic();
-	return 0;
+	panic(PHYS_MM_OUT_OF_MEMORY);
+	return 0; // to make GCC happy
 }
 
 uint64_t phys_get_total_memory()
