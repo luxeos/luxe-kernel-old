@@ -44,7 +44,7 @@ release_hdd: $(KERNEL)
 	@mcopy -i $(RELEASE_HDD) $(KERNEL) ::
 
 .PHONY: run
-run: full_release
+run: all
 	@$(QEMU) $(QEMUFLAGS)
 
 .PHONY: format

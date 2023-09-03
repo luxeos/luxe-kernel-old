@@ -8,10 +8,10 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __EXCP_H_
-#define __EXCP_H_
+#ifndef __CPU_H_
+#define __CPU_H_
 
-#include <luxe.h>
+#include <stdint.h>
 
 typedef struct {
 	uint64_t r15;
@@ -30,16 +30,13 @@ typedef struct {
 	uint64_t rbx;
 	uint64_t rax;
 
-	uint64_t vector;
-	uint64_t err;
-
 	uint64_t rip;
 	uint64_t cs;
 	uint64_t rflags;
 	uint64_t rsp;
 	uint64_t ss;
-} __attribute__((packed)) int_frame_t;
+} __attribute__((packed)) cpu_regs_t;
 
-void excp_handler(int_frame_t frame);
+void cpu_dump_regs(cpu_regs_t regs);
 
-#endif /* __EXCP_H_ */
+#endif /* __CPU_H_ */

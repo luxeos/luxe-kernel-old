@@ -26,6 +26,8 @@
 #include <luxe/luxe_vector.h>
 #include <luxe/luxe_version.h>
 
+#include <panic.h>
+
 #if defined(CONFIG_X86_64)
 #include <luxe/x86_64/luxe_asm.h>
 #endif

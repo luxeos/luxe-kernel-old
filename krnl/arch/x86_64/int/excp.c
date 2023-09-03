@@ -8,6 +8,7 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#include <cpu/cpu.h>
 #include <dd/pic/pic.h>
 #include <int/excp.h>
 #include <int/idt.h>
@@ -52,30 +53,17 @@ void excp_handler(int_frame_t frame)
 	if (frame.vector < 0x20) {
 		_klog("\npanic(cpu 1, 0x%.16llx): type %i (%s), registers:\n",
 			  frame.rip, frame.vector, g_exception_str[frame.vector]);
-		_klog(
-			"cr0: 0x%.16llx, cr2: 0x%.16llx, cr3: 0x%.16llx, cr4: 0x%.16llx\n",
-			read_cr0(), read_cr2(), read_cr3(), read_cr4());
-		_klog(
-			"rax: 0x%.16llx, rbx: 0x%.16llx, rcx: 0x%.16llx, rdx: 0x%.16llx\n",
-			frame.rax, frame.rbx, frame.rcx, frame.rdx);
-		_klog(
-			"rsp: 0x%.16llx, rbp: 0x%.16llx, rsi: 0x%.16llx, rdi: 0x%.16llx\n",
-			frame.rsp, frame.rbp, frame.rsi, frame.rdi);
-		_klog(
-			"r8:  0x%.16llx, r9:  0x%.16llx, r10: 0x%.16llx, r11: 0x%.16llx\n",
-			frame.r8, frame.r9, frame.r10, frame.r11);
-		_klog(
-			"r12: 0x%.16llx, r13: 0x%.16llx, r14: 0x%.16llx, r15: 0x%.16llx\n",
-			frame.r12, frame.r13, frame.r14, frame.r15);
-		_klog(
-			"rfl: 0x%.16llx, rip: 0x%.16llx, cs:  0x%.16llx, ss:  0x%.16llx\n",
-			frame.rflags, frame.rip, frame.cs, frame.ss);
-		_klog("fault cr2: 0x%.16llx, error code: 0x%.16llx, fault cpu: 1\n",
-			  read_cr2(), frame.err);
 
-		_klog("\nLuxeOS version:\n%s\n", g_luxeos_rel_str);
-		_klog("\nKernel version:\n%s (%s/%s)\n", g_kernel_ver_str,
-			  g_kernel_configuration_str, g_kernel_arch_str);
+		// we don't need to push the registers onto the stack again,
+		// so we just pass them
+		cpu_regs_t regs = { frame.r15, frame.r14,	 frame.r13, frame.r12,
+							frame.r11, frame.r10,	 frame.r9,	frame.r8,
+							frame.rbp, frame.rdi,	 frame.rsi, frame.rdx,
+							frame.rcx, frame.rbx,	 frame.rax, frame.rip,
+							frame.cs,  frame.rflags, frame.rsp, frame.ss };
+
+		cpu_dump_regs(regs);
+		luxeos_print_ver_str();
 
 		for (;;) {
 			__asm__ volatile("hlt");
