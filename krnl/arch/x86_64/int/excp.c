@@ -9,7 +9,7 @@
  */
 
 #include <cpu/cpu.h>
-#include <dd/pic/pic.h>
+#include <dd/apic/pic.h>
 #include <int/excp.h>
 #include <int/idt.h>
 

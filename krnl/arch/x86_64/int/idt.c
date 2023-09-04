@@ -8,7 +8,7 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <dd/pic/pic.h>
+#include <dd/apic/pic.h>
 #include <int/idt.h>
 
 #include <luxe.h>
