@@ -58,6 +58,8 @@ typedef struct {
 } __attribute__((packed)) apic_iso_t;
 
 extern madt_t *g_madt;
+extern uint64_t g_ioapic_addr;
+extern uint64_t g_lapic_addr;
 
 void madt_init(madt_t *madt);
 uint32_t madt_get_iso(uint32_t irq);

@@ -13,6 +13,8 @@
 #include <cpu/gdt.h>
 #include <int/idt.h>
 #include <dd/uart/uart.h>
+#include <dd/apic/apic.h>
+#include <dd/pit/pit.h>
 #include <dd/fb/fb.h>
 #include <mem/phys.h>
 #include <mem/virt.h>
@@ -26,11 +28,17 @@ void arch_init()
 	gdt_init();
 	idt_init();
 
-	fb_init();
-	display_bootlogo();
-
 	phys_init();
 	virt_init();
 
+	fb_init();
+	display_bootlogo();
+
+	// device init
+	pit_init();
+
 	acpi_init();
+	apic_init();
+
+	sti();
 }

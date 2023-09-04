@@ -8,16 +8,15 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __IRQ_H_
-#define __IRQ_H_
-
-#include <int/idt.h>
-
+#include <mem/mmio.h>
 #include <luxe.h>
 
-#define IRQ_PIT 0
+void mmio_write(void *reg, uint32_t val)
+{
+	*(volatile uint32_t *)reg = val;
+}
 
-void irq_register(uint8_t irq, interrupt_handler handler);
-void irq_deregister(uint8_t irq);
-
-#endif /* __IRQ_H_ */
+uint32_t mmio_read(void *reg)
+{
+	return *(volatile uint32_t *)reg;
+}

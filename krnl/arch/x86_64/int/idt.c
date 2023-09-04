@@ -30,6 +30,7 @@ void idt_init()
 	}
 
 	pic_init();
+	pic_disable();
 
 	idtr_t idtr;
 	idtr.size = sizeof(idt) - 1;

@@ -8,16 +8,16 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __IRQ_H_
-#define __IRQ_H_
-
-#include <int/idt.h>
+#ifndef __PIT_H_
+#define __PIT_H_
 
 #include <luxe.h>
 
-#define IRQ_PIT 0
+#define PIT_COUNTER0 0x40
+#define PIT_CMD 0x43
 
-void irq_register(uint8_t irq, interrupt_handler handler);
-void irq_deregister(uint8_t irq);
+void pit_init(void);
+void pit_tick(void);
+void pit_wait(uint32_t ms);
 
-#endif /* __IRQ_H_ */
+#endif /* __PIT_H_*/

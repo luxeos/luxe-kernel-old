@@ -8,16 +8,12 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __IRQ_H_
-#define __IRQ_H_
+#ifndef __APIC_H_
+#define __APIC_H_
 
-#include <int/idt.h>
+#define IA32_APIC_BASE_MSR 0x1b
 
-#include <luxe.h>
+void apic_init(void);
+void apic_eoi(void);
 
-#define IRQ_PIT 0
-
-void irq_register(uint8_t irq, interrupt_handler handler);
-void irq_deregister(uint8_t irq);
-
-#endif /* __IRQ_H_ */
+#endif /* __APIC_H_ */

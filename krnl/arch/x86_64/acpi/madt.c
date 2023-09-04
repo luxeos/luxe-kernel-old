@@ -10,6 +10,7 @@
 
 #include <acpi/acpi.h>
 #include <acpi/madt.h>
+#include <mem/phys.h>
 
 #include <luxe.h>
 
@@ -18,7 +19,8 @@ madt_t *g_madt;
 uint32_t g_acpi_cpu_count;
 uint8_t g_acpi_cpu_ids[CONFIG_CPU_MAX];
 
-uint8_t *g_ioapic_addr;
+uint64_t g_ioapic_addr;
+uint64_t g_lapic_addr;
 
 // 16 IRQs
 apic_iso_t *g_apic_isos[16];
@@ -27,6 +29,8 @@ void madt_init(madt_t *madt)
 {
 	g_madt = madt;
 	g_acpi_cpu_count = 0;
+	g_lapic_addr = PHYS_TO_VIRT(madt->lapic_addr);
+	klog("lapic addr: 0x%.8llx", g_lapic_addr);
 
 	for (size_t i = 0; i < 16; i++) {
 		g_apic_isos[i] = NULL;
@@ -50,7 +54,7 @@ void madt_init(madt_t *madt)
 		}
 		case APIC_IOAPIC: {
 			apic_ioapic_t *ioapic = (apic_ioapic_t *)ptr;
-			g_ioapic_addr = (uint8_t *)(uintptr_t)ioapic->ioapic_addr;
+			g_ioapic_addr = PHYS_TO_VIRT(ioapic->ioapic_addr);
 			klog("found ioapic %i, addr: 0x%.8llx, gsi_base: %i",
 				 ioapic->ioapic_id, ioapic->ioapic_addr, ioapic->gsi_base);
 			break;

@@ -9,6 +9,7 @@
  */
 
 #include <cpu/cpu.h>
+#include <dd/apic/apic.h>
 #include <dd/apic/pic.h>
 #include <int/excp.h>
 #include <int/idt.h>
@@ -69,9 +70,11 @@ void excp_handler(int_frame_t frame)
 			__asm__ volatile("hlt");
 		}
 	} else if (frame.vector >= 0x20 && frame.vector <= 0x2f) {
-		if (g_int_handlers[frame.vector] != NULL) {
-			g_int_handlers[frame.vector]();
+		int irq = frame.vector - 0x20;
+		if (g_int_handlers[irq] != NULL) {
+			g_int_handlers[irq]();
 		}
-		// eoi
+
+		apic_eoi();
 	}
 }
