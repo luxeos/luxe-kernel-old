@@ -22,7 +22,7 @@ all: full_release
 full_release: release_iso release_hdd
 
 .PHONY: release_iso
-release_iso: $(KERNEL) limine_config
+release_iso: $(KERNEL)
 	@printf " GEN  $(notdir $(RELEASE_ISO))\n"
 	@mkdir -p $(RELEASE_DIR)
 	@mkdir -p iso_tmp/EFI/BOOT
@@ -32,7 +32,7 @@ release_iso: $(KERNEL) limine_config
 	@rm -rf iso_tmp
 
 .PHONY: release_hdd
-release_hdd: $(KERNEL) limine_config
+release_hdd: $(KERNEL)
 	@printf " GEN  $(notdir $(RELEASE_HDD))\n"
 	@mkdir -p $(RELEASE_DIR)
 	@dd if=/dev/zero of=$(RELEASE_HDD) bs=1M count=32 &>/dev/null
@@ -89,7 +89,7 @@ endif
 .PHONY: clean
 clean:
 	@printf " CLEAN\n"
-	@rm -rf $(BUILD_DIR) $(RELEASE_DIR) .config.old aux/limine.cfg
+	@rm -rf $(BUILD_DIR) $(RELEASE_DIR) .config.old
 
 .PHONY: distclean
 distclean:
