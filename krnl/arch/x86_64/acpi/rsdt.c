@@ -10,6 +10,7 @@
 
 #include <acpi/acpi.h>
 #include <acpi/rsdt.h>
+#include <acpi/madt.h>
 #include <mem/phys.h>
 
 #include <luxe.h>
@@ -17,28 +18,14 @@
 xsdt_t *g_xsdt;
 rsdt_t *g_rsdt;
 
-void rsdt_init(bool use_xsdt)
+void rsdt_init()
 {
-	if (use_xsdt) {
-		xsdp_t *rsdp = (xsdp_t *)rsdp_request.response->address;
-		uint8_t xsdt_checksum = 0;
-		uint8_t *xsdt_ptr = (uint8_t *)rsdp;
-		for (uintptr_t i = 0; i < sizeof(xsdt_t); i++) {
-			xsdt_checksum += xsdt_ptr[i];
-		}
+	rsdp_t *rsdp = (rsdp_t *)rsdp_request.response->address;
 
-		assert((xsdt_checksum & 0xFF) == 0);
-		g_xsdt = (xsdt_t *)(uintptr_t)PHYS_TO_VIRT(rsdp->xsdt_addr);
-	} else {
-		rsdp_t *rsdp = (rsdp_t *)rsdp_request.response->address;
-		uint8_t rsdt_checksum = 0;
-		uint8_t *rsdt_ptr = (uint8_t *)rsdp;
-		for (uintptr_t i = 0; i < sizeof(rsdt_t); i++) {
-			rsdt_checksum += rsdt_ptr[i];
-		}
-
-		assert((rsdt_checksum & 0xFF) == 0);
-		g_rsdt = (rsdt_t *)(uintptr_t)PHYS_TO_VIRT(rsdp->rsdt_addr);
+	g_rsdt = (rsdt_t *)(uintptr_t)PHYS_TO_VIRT(rsdp->rsdt_addr);
+	if (_use_xsdt()) {
+		xsdp_t *xsdp = (xsdp_t *)rsdp_request.response->address;
+		g_xsdt = (xsdt_t *)(uintptr_t)PHYS_TO_VIRT(xsdp->xsdt_addr);
 	}
 
 	// we'll find all sdt's here
@@ -52,6 +39,8 @@ void rsdt_init(bool use_xsdt)
 	// table = (table_t *)_find_sdt(use_xsdt, "SIG_");
 	// assert(table != NULL);
 	// table_init(table);
+	g_madt = (_find_sdt("APIC"));
+	(void)g_madt;
 
 	klog("done");
 }

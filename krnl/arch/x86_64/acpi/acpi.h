@@ -44,6 +44,7 @@ typedef struct {
 
 void acpi_init();
 
-void *_find_sdt(bool use_xsdt, char *signature);
+void *_find_sdt(char *signature);
+bool _use_xsdt();
 
 #endif /* __ACPI_H_ */

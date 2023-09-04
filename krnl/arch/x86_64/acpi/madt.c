@@ -8,24 +8,14 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __RSDT_H_
-#define __RSDT_H_
-
 #include <acpi/acpi.h>
+#include <acpi/madt.h>
 
-typedef struct {
-	sdt_t header;
-	uint32_t sdt[];
-} __attribute__((packed)) rsdt_t;
+#include <luxe.h>
 
-typedef struct {
-	sdt_t header;
-	uint64_t sdt[];
-} __attribute__((packed)) xsdt_t;
+madt_t *g_madt;
 
-extern xsdt_t *g_xsdt;
-extern rsdt_t *g_rsdt;
-
-void rsdt_init();
-
-#endif /* __RSDT_H_ */
+void madt_init()
+{
+	klog("done");
+}
