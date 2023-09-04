@@ -15,6 +15,14 @@
 
 #include <luxe.h>
 
+#define APIC_LAPIC 0
+#define APIC_IOAPIC 1
+#define APIC_ISO 2
+#define APIC_IOAPIC_NMI 3
+#define APIC_LAPIC_NMI 4
+#define APIC_LAPIC_OVERRIDE 5
+#define APIC_X2APIC 9
+
 typedef struct {
 	sdt_t header;
 	uint32_t lapic_addr;
@@ -51,6 +59,7 @@ typedef struct {
 
 extern madt_t *g_madt;
 
-void madt_init(void);
+void madt_init(madt_t *madt);
+uint32_t madt_get_iso(uint32_t irq);
 
 #endif /* __MADT_H_ */

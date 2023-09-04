@@ -39,8 +39,9 @@ void rsdt_init()
 	// table = (table_t *)_find_sdt(use_xsdt, "SIG_");
 	// assert(table != NULL);
 	// table_init(table);
-	g_madt = (_find_sdt("APIC"));
-	(void)g_madt;
+	madt_t *madt = _find_sdt("APIC");
+	assert(madt != NULL);
+	madt_init(madt);
 
 	klog("done");
 }

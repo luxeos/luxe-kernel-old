@@ -15,7 +15,85 @@
 
 madt_t *g_madt;
 
-void madt_init()
+uint32_t g_acpi_cpu_count;
+uint8_t g_acpi_cpu_ids[CONFIG_CPU_MAX];
+
+uint8_t *g_ioapic_addr;
+
+// 16 IRQs
+apic_iso_t *g_apic_isos[16];
+
+void madt_init(madt_t *madt)
 {
+	g_madt = madt;
+	g_acpi_cpu_count = 0;
+
+	for (size_t i = 0; i < 16; i++) {
+		g_apic_isos[i] = NULL;
+	}
+
+	uint8_t *ptr = (uint8_t *)(madt + 1);
+	uint8_t *end = (uint8_t *)madt + madt->header.length;
+
+	while (ptr < end) {
+		apic_header_t *header = (apic_header_t *)ptr;
+
+		switch (header->type) {
+		case APIC_LAPIC: {
+			apic_lapic_t *lapic = (apic_lapic_t *)ptr;
+			klog("found lapic entry, id %i", g_acpi_cpu_count);
+			if (g_acpi_cpu_count < CONFIG_CPU_MAX) {
+				g_acpi_cpu_ids[g_acpi_cpu_count] = lapic->apic_id;
+				++g_acpi_cpu_count;
+			}
+			break;
+		}
+		case APIC_IOAPIC: {
+			apic_ioapic_t *ioapic = (apic_ioapic_t *)ptr;
+			g_ioapic_addr = (uint8_t *)(uintptr_t)ioapic->ioapic_addr;
+			klog("found ioapic %i, addr: 0x%.8llx, gsi_base: %i",
+				 ioapic->ioapic_id, ioapic->ioapic_addr, ioapic->gsi_base);
+			break;
+		}
+		case APIC_ISO: {
+			apic_iso_t *iso = (apic_iso_t *)ptr;
+			g_apic_isos[iso->irq] = iso;
+			klog("found ioapic iso, bus: %i, irq: %i, gsi: %i, flags: 0x%.4lx",
+				 iso->bus, iso->irq, iso->gsi, iso->flags);
+			break;
+		}
+		case APIC_IOAPIC_NMI: {
+			klog("found ioapic nmi");
+			break;
+		}
+		case APIC_LAPIC_NMI: {
+			klog("found lapic nmi");
+			break;
+		}
+		case APIC_LAPIC_OVERRIDE: {
+			klog("found lapic address override");
+			break;
+		}
+		case APIC_X2APIC: {
+			klog("found x2apic");
+			break;
+		}
+		default: {
+			klog("found invalid madt entry %i", header->type);
+			break;
+		}
+		}
+
+		ptr += header->length;
+	}
+
 	klog("done");
+}
+
+uint32_t madt_get_iso(uint32_t irq)
+{
+	if (g_apic_isos[irq] != NULL) {
+		return g_apic_isos[irq]->gsi;
+	}
+	return irq;
 }
