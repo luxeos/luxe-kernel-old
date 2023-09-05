@@ -15,7 +15,7 @@
 
 #include <luxe.h>
 
-madt_t *g_madt;
+madt_t *g_madt = NULL;
 
 uint32_t g_acpi_cpu_count;
 apic_lapic_t *g_acpi_lapic[CONFIG_CPU_MAX];

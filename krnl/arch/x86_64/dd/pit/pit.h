@@ -18,6 +18,7 @@
 
 void pit_init(void);
 void pit_tick(void);
+uint64_t pit_get_ticks(void);
 void pit_wait(uint32_t ms);
 
 #endif /* __PIT_H_*/

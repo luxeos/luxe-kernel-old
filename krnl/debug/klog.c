@@ -8,6 +8,8 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#include <boot/boot.h>
+
 #include <dd/fb/fb.h>
 #include <debug/klog.h>
 #include <dd/uart/uart.h>
@@ -16,23 +18,19 @@
 
 void _klog(char *fmt, ...)
 {
-#ifndef CONFIG_DEBUG
 	va_list ptr;
 	char klog_buffer[4096];
 
 	va_start(ptr, fmt);
 	vsnprintf((char *)&klog_buffer, -1, fmt, ptr);
+#ifndef CONFIG_DEBUG
+	// if (g_fb_init && boot_parse_cmdline("-v")) {
 	if (g_fb_init) {
 		fb_write(klog_buffer);
 	}
-	va_end(ptr);
+	// }
 #else
-	va_list ptr;
-	char klog_buffer[4096];
-
-	va_start(ptr, fmt);
-	vsnprintf((char *)&klog_buffer, -1, fmt, ptr);
 	uart_write(klog_buffer);
-	va_end(ptr);
 #endif
+	va_end(ptr);
 }

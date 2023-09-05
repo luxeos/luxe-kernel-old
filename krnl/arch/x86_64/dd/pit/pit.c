@@ -32,6 +32,11 @@ void pit_tick(void)
 	g_pit_ticks++;
 }
 
+uint64_t pit_get_ticks(void)
+{
+	return g_pit_ticks;
+}
+
 void pit_wait(uint32_t ms)
 {
 	uint32_t now = g_pit_ticks;

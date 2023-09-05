@@ -9,13 +9,6 @@
 ;
 ;
 
-AP_BOOT_COUNTER     equ 0xff0
-ARG_CPUINFO         equ 0xfe0
-ARG_CR3_VAL         equ 0xfd0
-ARG_ENTRYPOINT      equ 0xfc0
-ARG_RSP             equ 0xfb0
-ARG_IDTPTR          equ 0xfa0
-
 [bits 16]
 real_entry:
     cli
@@ -54,7 +47,7 @@ prot_entry:
     mov ds, eax
     mov fs, eax
     mov gs, eax
-    mov eax, [ARG_CR3_VAL]
+    mov eax, [0xfd0]
     mov cr3, eax
     mov eax, cr4
     or eax, 1 << 5
@@ -72,8 +65,8 @@ prot_entry:
 
 [bits 64]
 long_entry:
-    lidt [ARG_IDTPTR]
-    mov rsp, [ARG_RSP]
-    mov rdi, [ARG_CPUINFO]
-    lock add word [AP_BOOT_COUNTER], 1
-    call [ARG_ENTRYPOINT]
+    lidt [0xfa0]
+    mov rsp, [0xfb0]
+    mov rdi, [0xfe0]
+    lock add word [0xff0], 1
+    call [0xfc0]

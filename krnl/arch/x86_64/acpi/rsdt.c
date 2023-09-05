@@ -11,6 +11,7 @@
 #include <acpi/acpi.h>
 #include <acpi/rsdt.h>
 #include <acpi/madt.h>
+#include <acpi/hpet.h>
 #include <mem/phys.h>
 
 #include <luxe.h>
@@ -42,6 +43,10 @@ void rsdt_init()
 	madt_t *madt = _find_sdt("APIC");
 	assert(madt != NULL);
 	madt_init(madt);
+
+	acpi_hpet_t *hpet = _find_sdt("HPET");
+	assert(hpet != NULL);
+	hpet_init(hpet);
 
 	klog("done");
 }

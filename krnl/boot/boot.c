@@ -39,3 +39,8 @@ volatile struct limine_smp_request smp_request = {
 	.id = LIMINE_SMP_REQUEST,
 	.revision = 0,
 };
+
+volatile struct limine_kernel_file_request kern_file_request = {
+	.id = LIMINE_KERNEL_FILE_REQUEST,
+	.revision = 0,
+};

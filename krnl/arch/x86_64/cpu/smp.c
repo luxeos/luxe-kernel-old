@@ -9,6 +9,7 @@
  */
 
 #include <acpi/madt.h>
+#include <acpi/hpet.h>
 #include <boot/boot.h>
 #include <cpu/gdt.h>
 #include <cpu/tss.h>
@@ -83,7 +84,7 @@ void smp_init(void)
 			(uint64_t) & (g_smp_info->cpu[g_smp_info->cpu_count]);
 
 		lapic_send_ipi(g_acpi_lapic[i]->apic_id, 0, 0b101);
-		pit_wait(10);
+		hpet_wait(10);
 
 		klog("startup core %d", g_acpi_lapic[i]->acpi_proc_id);
 		bool is_up = false;
@@ -95,7 +96,7 @@ void smp_init(void)
 					is_up = true;
 					break;
 				}
-				pit_wait(10);
+				hpet_wait(10);
 			}
 			if (is_up) {
 				break;
@@ -126,7 +127,7 @@ __attribute__((noreturn)) void smp_ap_entry_point(cpu_t *cpu_info)
 
 	_lapic_out(LAPIC_SVR, 0x100 | 0xff);
 
-	pit_wait(10);
+	hpet_wait(10);
 
 	sti();
 	for (;;) {
