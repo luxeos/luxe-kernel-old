@@ -8,11 +8,9 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <boot/bootlogo.h>
-#include <dd/fb/fb.h>
+.global smp_tramp_start
+.global smp_tramp_end
 
-#include <luxe.h>
-
-void display_bootlogo()
-{
-}
+smp_tramp_start:
+    .incbin "build/krnl/arch/x86_64/cpu/_trampoline.bin"
+smp_tramp_end:

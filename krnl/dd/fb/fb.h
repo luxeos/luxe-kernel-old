@@ -15,10 +15,12 @@
 
 typedef struct {
 	uint32_t *addr;
-	uint64_t width;
-	uint64_t height;
-	uint64_t pitch;
+	uint16_t width;
+	uint16_t height;
+	uint16_t pitch;
 	uint16_t bpp;
+	int glyph_width;
+	int glyph_height;
 } fb_info_t;
 
 extern fb_info_t g_fb_info;

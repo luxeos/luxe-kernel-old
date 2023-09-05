@@ -11,6 +11,7 @@
 #include <acpi/acpi.h>
 #include <boot/bootlogo.h>
 #include <cpu/gdt.h>
+#include <cpu/smp.h>
 #include <int/idt.h>
 #include <dd/uart/uart.h>
 #include <dd/apic/apic.h>
@@ -25,13 +26,12 @@ void arch_init()
 {
 	uart_init();
 
-	gdt_init();
+	gdt_init(NULL);
 	idt_init();
+	fb_init();
 
 	phys_init();
 	virt_init();
-
-	fb_init();
 	display_bootlogo();
 
 	// device init
@@ -41,4 +41,6 @@ void arch_init()
 	apic_init();
 
 	sti();
+
+	smp_init();
 }

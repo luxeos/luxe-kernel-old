@@ -14,8 +14,14 @@ override MAKEFLAGS += -Rr
 include .config
 include Makefile.in
 
+ifeq ($(CONFIG_X86_64),y)
+SMP_FILE := krnl/arch/x86_64/cpu/_smp.s
+ARCH_AS_FILES += $(SMP_FILE)
+OBJ += $(SMP_FILE:%.s=$(BUILD_DIR)/%.o)
+endif
+
 .PHONY: all
-all: full_release
+all: release_iso
 	@utils/printbuildtime.sh $(BUILD_START_TIME)
 
 .PHONY: full_release
@@ -78,12 +84,25 @@ $(BUILD_DIR)/%.o: %.asm
 	@printf " AS   $^\n"
 	@$(AS) $(ASFLAGS) $< -o $@
 
-$(KERNEL): $(OBJ)
+$(BUILD_DIR)/%.o: %.s
 	@mkdir -p $(dir $@)
+	@printf " AS   $^\n"
+	@$(CC) -flto -I. -c $< -o $@
+
+$(KERNEL): $(SMP_TRAMP_BLOB) $(OBJ)
+	@mkdir -p $(dir $@)
+	@mkdir -p $(BUILD_DIR)/krnl/data
 	@printf " LD   $@\n"
 	@$(LD) $(OBJ) $(LDFLAGS) -o $@
 ifeq ($(CONFIG_RELEASE),y)
 	@$(OBJCOPY) --strip-debug $(KERNEL)
+endif
+
+$(SMP_TRAMP_BLOB): $(SMP_TRAMP_FILE)
+ifeq ($(CONFIG_X86_64),y)
+	@mkdir -p $(dir $@)
+	@printf " AS   $^\n"
+	@$(AS) $< -o $@
 endif
 
 .PHONY: clean

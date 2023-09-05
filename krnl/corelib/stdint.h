@@ -8,8 +8,8 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __STDINT_H_
-#define __STDINT_H_
+#ifndef _STDINT_H
+#define _STDINT_H
 
 #ifdef __cplusplus
 #define NULL 0
@@ -58,4 +58,4 @@ typedef uint64_t uintmax_t;
 #define INTMAX_MAX INT64_MAX
 #define UINTMAX_MAX UINT64_MAX
 
-#endif /* __STDINT_H_ */
+#endif /* _STDINT_H */

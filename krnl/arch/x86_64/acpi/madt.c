@@ -10,6 +10,7 @@
 
 #include <acpi/acpi.h>
 #include <acpi/madt.h>
+#include <dd/apic/lapic.h>
 #include <mem/phys.h>
 
 #include <luxe.h>
@@ -17,6 +18,7 @@
 madt_t *g_madt;
 
 uint32_t g_acpi_cpu_count;
+apic_lapic_t *g_acpi_lapic[CONFIG_CPU_MAX];
 uint8_t g_acpi_cpu_ids[CONFIG_CPU_MAX];
 
 uint64_t g_ioapic_addr;
@@ -45,8 +47,10 @@ void madt_init(madt_t *madt)
 		switch (header->type) {
 		case APIC_LAPIC: {
 			apic_lapic_t *lapic = (apic_lapic_t *)ptr;
-			klog("found lapic entry, id %i", g_acpi_cpu_count);
+			klog("found lapic entry, id %i, flags 0x%x", g_acpi_cpu_count,
+				 lapic->flags);
 			if (g_acpi_cpu_count < CONFIG_CPU_MAX) {
+				g_acpi_lapic[g_acpi_cpu_count] = lapic;
 				g_acpi_cpu_ids[g_acpi_cpu_count] = lapic->apic_id;
 				++g_acpi_cpu_count;
 			}

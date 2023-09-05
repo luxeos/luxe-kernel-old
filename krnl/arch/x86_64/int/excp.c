@@ -11,6 +11,7 @@
 #include <cpu/cpu.h>
 #include <dd/apic/apic.h>
 #include <dd/apic/pic.h>
+#include <dd/fb/fb.h>
 #include <int/excp.h>
 #include <int/idt.h>
 
@@ -54,6 +55,12 @@ void excp_handler(int_frame_t frame)
 	if (frame.vector < 0x20) {
 		_klog("\npanic(cpu 1, 0x%.16llx): type %i (%s), registers:\n",
 			  frame.rip, frame.vector, g_exception_str[frame.vector]);
+
+		for (uint64_t y = 0; y < g_fb_info.height; y++) {
+			for (uint64_t x = 0; x < g_fb_info.width; x++) {
+				g_fb_info.addr[y * g_fb_info.width + x] = 0xaa00aa;
+			}
+		}
 
 		// we don't need to push the registers onto the stack again,
 		// so we just pass them

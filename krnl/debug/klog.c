@@ -8,6 +8,7 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
+#include <dd/fb/fb.h>
 #include <debug/klog.h>
 #include <dd/uart/uart.h>
 
@@ -16,7 +17,13 @@
 void _klog(char *fmt, ...)
 {
 #ifndef CONFIG_DEBUG
-	(void)fmt;
+	va_list ptr;
+	char klog_buffer[4096];
+
+	va_start(ptr, fmt);
+	vsnprintf((char *)&klog_buffer, -1, fmt, ptr);
+	// fb_printf(klog_buffer, 0xffffff);
+	va_end(ptr);
 #else
 	va_list ptr;
 	char klog_buffer[4096];

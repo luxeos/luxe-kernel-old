@@ -29,9 +29,6 @@ void fb_init()
 	g_fb_info.pitch = framebuffer_request.response->framebuffers[0]->pitch;
 	g_fb_info.bpp = framebuffer_request.response->framebuffers[0]->bpp;
 
-	// only 32-bit framebuffers are supported
-	assert(g_fb_info.bpp == 32);
-
 	klog(
 		"framebuffer addr = 0x%lx, width: %lu, height: %lu, pitch: %lu, bpp: %u",
 		g_fb_info.addr, g_fb_info.width, g_fb_info.height, g_fb_info.pitch,

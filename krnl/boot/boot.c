@@ -34,3 +34,8 @@ volatile struct limine_framebuffer_request framebuffer_request = {
 	.id = LIMINE_FRAMEBUFFER_REQUEST,
 	.revision = 0,
 };
+
+volatile struct limine_smp_request smp_request = {
+	.id = LIMINE_SMP_REQUEST,
+	.revision = 0,
+};

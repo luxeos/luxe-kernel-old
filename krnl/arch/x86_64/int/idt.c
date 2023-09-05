@@ -44,7 +44,7 @@ void idt_set_entry(uint8_t vector, uint64_t handler, uint8_t flags)
 {
 	idt_desc_t *entry = &idt[vector];
 	entry->base_lo = handler & 0xffff;
-	entry->cs = 0x08;
+	entry->cs = 0x28;
 	entry->ist = 0;
 	entry->flags = flags;
 	entry->base_mid = (handler >> 16) & 0xffff;

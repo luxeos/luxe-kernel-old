@@ -37,15 +37,26 @@ uint32_t lapic_get_id(void)
 
 void lapic_send_init(uint32_t apic_id)
 {
-	(void)apic_id;
-	klog("NOT IMPLEMENTED YET");
+	_lapic_out(LAPIC_ICR_HI, apic_id << 24);
+	_lapic_out(LAPIC_ICR_LO,
+			   ICR_INIT | ICR_PHYS | ICR_ASSERT | ICR_EDGE | ICR_NO_SHORTHAND);
+	while (_lapic_in(LAPIC_ICR_LO) & ICR_SEND_PENDING)
+		;
+}
+
+void lapic_send_ipi(uint8_t dest, uint8_t vector, uint32_t mtype)
+{
+	_lapic_out(LAPIC_ICR_HI, (uint32_t)dest << 24);
+	_lapic_out(LAPIC_ICR_LO, (mtype << 8) | vector);
 }
 
 void lapic_send_startup(uint32_t apic_id, uint32_t vector)
 {
-	(void)apic_id;
-	(void)vector;
-	klog("NOT IMPLEMENTED YET");
+	_lapic_out(LAPIC_ICR_HI, apic_id << 24);
+	_lapic_out(LAPIC_ICR_LO, vector | ICR_STARTUP | ICR_PHYS | ICR_ASSERT |
+								 ICR_EDGE | ICR_NO_SHORTHAND);
+	while (_lapic_in(LAPIC_ICR_LO) & ICR_SEND_PENDING)
+		;
 }
 
 uint32_t _lapic_in(uint16_t reg)

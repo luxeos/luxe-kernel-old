@@ -12,6 +12,11 @@
 #define __CPU_H_
 
 #include <stdint.h>
+#include <stdbool.h>
+
+#define MSR_FS 0xc0000100
+#define MSR_GS 0xc0000101
+#define MSR_KERNEL_GS 0xc0000102
 
 typedef struct {
 	uint64_t r15;
