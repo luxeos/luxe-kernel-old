@@ -48,9 +48,9 @@ void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np);
 
 addr_space_t *create_ads();
 
-void _virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
-			   uint64_t flags);
-void _virt_unmap(addr_space_t *ads, uint64_t virt_addr);
+void __virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
+				uint64_t flags);
+void __virt_unmap(addr_space_t *ads, uint64_t virt_addr);
 uint64_t virt_get_phys_addr(addr_space_t *ads, uint64_t virt_addr);
 
 #endif /* __VIRT_H_ */

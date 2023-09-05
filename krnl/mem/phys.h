@@ -15,13 +15,15 @@
 
 #include <luxe.h>
 
+#define HHDM_OFFSET 0xffff800000000000
+
 #define BLOCK_SIZE 0x1000
 #define BLOCKS_PER_BITMAP 8
 
 #define NUM_BLOCKS(num) (((num) + BLOCK_SIZE - 1) / BLOCK_SIZE)
 
-#define VIRT_TO_PHYS(addr) ((uint64_t)(addr)-MEM_VIRT_OFF)
-#define PHYS_TO_VIRT(addr) ((uint64_t)(addr) + MEM_VIRT_OFF)
+#define VIRT_TO_PHYS(addr) ((uint64_t)(addr)-0xffff800000000000)
+#define PHYS_TO_VIRT(addr) ((uint64_t)(addr) + 0xffff800000000000)
 
 void bitmap_set(uint64_t addr, uint64_t blocks);
 void bitmap_clear(uint64_t addr, uint64_t blocks);

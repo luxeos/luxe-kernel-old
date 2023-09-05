@@ -24,6 +24,10 @@ void virt_init()
 	struct limine_kernel_address_response *kernel_addr =
 		kernel_addr_request.response;
 
+	// just a quick sanity check because I had to
+	// hardcode this address for SMP
+	assert(hhdm_request.response->offset == 0xffff800000000000);
+
 	g_kern_ads.pml4 = kmalloc(8 * BLOCK_SIZE);
 	memset(g_kern_ads.pml4, 0, 8 * BLOCK_SIZE);
 
@@ -82,7 +86,7 @@ void virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
 	}
 
 	for (size_t i = 0; i < np * BLOCK_SIZE; i += BLOCK_SIZE) {
-		_virt_map(ads, virt_addr + i, phys_addr + i, flags);
+		__virt_map(ads, virt_addr + i, phys_addr + i, flags);
 	}
 }
 
@@ -100,7 +104,7 @@ void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np)
 	}
 
 	for (size_t i = 0; i < np * BLOCK_SIZE; i += BLOCK_SIZE) {
-		_virt_unmap(ads, virt_addr + i);
+		__virt_unmap(ads, virt_addr + i);
 	}
 }
 
@@ -127,8 +131,8 @@ addr_space_t *create_ads()
 	return as;
 }
 
-void _virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
-			   uint64_t flags)
+void __virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
+				uint64_t flags)
 {
 	addr_space_t *as = (ads == NULL ? &g_kern_ads : ads);
 
@@ -169,7 +173,7 @@ void _virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
 	}
 }
 
-void _virt_unmap(addr_space_t *ads, uint64_t virt_addr)
+void __virt_unmap(addr_space_t *ads, uint64_t virt_addr)
 {
 	addr_space_t *as = (ads == NULL ? &g_kern_ads : ads);
 
