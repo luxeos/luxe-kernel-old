@@ -11,9 +11,15 @@
 #include <boot/boot.h>
 #include <dd/fb/fb.h>
 
+#include <flanterm/flanterm.h>
+#include <flanterm/backends/fb.h>
+
 #include <luxe.h>
 
 fb_info_t g_fb_info;
+struct flanterm_context *ft_ctx;
+
+bool g_fb_init = false;
 
 void fb_init()
 {
@@ -34,10 +40,19 @@ void fb_init()
 		g_fb_info.addr, g_fb_info.width, g_fb_info.height, g_fb_info.pitch,
 		g_fb_info.bpp);
 
+	ft_ctx = flanterm_fb_simple_init(g_fb_info.addr, g_fb_info.width,
+									 g_fb_info.height, g_fb_info.pitch);
+	g_fb_init = true;
+
 	klog("done");
 }
 
 void putpixel(int x, int y, uint32_t color)
 {
 	g_fb_info.addr[y * g_fb_info.width + x] = color;
+}
+
+void fb_write(char *msg)
+{
+	flanterm_write(ft_ctx, msg, strlen(msg));
 }

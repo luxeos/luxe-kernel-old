@@ -43,3 +43,14 @@ int strncmp(const char *s1, const char *s2, size_t n)
 		return (*(uint8_t *)s1 - *(uint8_t *)s2);
 	}
 }
+
+int strlen(const char *str)
+{
+	int len = 0;
+	while (*str != '\0') {
+		len++;
+		str++;
+	}
+
+	return len;
+}

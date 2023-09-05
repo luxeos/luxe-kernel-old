@@ -19,13 +19,15 @@ typedef struct {
 	uint16_t height;
 	uint16_t pitch;
 	uint16_t bpp;
-	int glyph_width;
-	int glyph_height;
 } fb_info_t;
 
 extern fb_info_t g_fb_info;
 
+extern bool g_fb_init;
+
 void fb_init();
 void putpixel(int x, int y, uint32_t color);
+
+void fb_write(char *msg);
 
 #endif /* __FB_H_ */

@@ -22,7 +22,9 @@ void _klog(char *fmt, ...)
 
 	va_start(ptr, fmt);
 	vsnprintf((char *)&klog_buffer, -1, fmt, ptr);
-	// fb_printf(klog_buffer, 0xffffff);
+	if (g_fb_init) {
+		fb_write(klog_buffer);
+	}
 	va_end(ptr);
 #else
 	va_list ptr;

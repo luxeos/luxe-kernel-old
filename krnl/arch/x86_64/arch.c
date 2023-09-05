@@ -25,10 +25,10 @@
 void arch_init()
 {
 	uart_init();
+	fb_init();
 
 	gdt_init(NULL);
 	idt_init();
-	fb_init();
 
 	phys_init();
 	virt_init();
