@@ -9,6 +9,7 @@
  */
 
 #include <cpu/cpu.h>
+#include <cpu/smp.h>
 #include <dd/apic/apic.h>
 #include <dd/apic/pic.h>
 #include <dd/fb/fb.h>
@@ -53,14 +54,16 @@ static const char *g_exception_str[32] = { "division by zero",
 void excp_handler(int_frame_t frame)
 {
 	if (frame.vector < 0x20) {
-		_klog("\npanic(cpu 1, 0x%.16llx): type %i (%s), registers:\n",
-			  frame.rip, frame.vector, g_exception_str[frame.vector]);
+		_klog_lock();
 
-		for (uint64_t y = 0; y < g_fb_info.height; y++) {
-			for (uint64_t x = 0; x < g_fb_info.width; x++) {
-				g_fb_info.addr[y * g_fb_info.width + x] = 0xaa00aa;
-			}
+		cpu_t *cpu = smp_cur_cpu();
+		int cpu_num = 1;
+		if (cpu != NULL) {
+			cpu_num += cpu->cpu_id;
 		}
+
+		_klog("\npanic(cpu %d, 0x%.16llx): type %i (%s), registers:\n", cpu_num,
+			  frame.rip, frame.vector, g_exception_str[frame.vector]);
 
 		// we don't need to push the registers onto the stack again,
 		// so we just pass them

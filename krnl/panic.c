@@ -27,10 +27,12 @@ char *g_error_name[] = {
 
 __attribute__((noreturn)) void __panic(cpu_regs_t regs, int err)
 {
+	_klog_lock();
+
 	cpu_t *cpu = smp_cur_cpu();
 	int cpu_num = 1;
 	if (cpu != NULL) {
-		cpu_num = cpu->cpu_id;
+		cpu_num += cpu->cpu_id;
 	}
 
 	_klog("\npanic(cpu %d, 0x%8.llx): \"%s\" (%s), registers:\n", cpu_num,

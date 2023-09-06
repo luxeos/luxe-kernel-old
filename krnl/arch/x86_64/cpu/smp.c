@@ -129,7 +129,11 @@ __attribute__((noreturn)) void smp_ap_entry_point(cpu_t *cpu_info)
 
 	hpet_wait(10);
 
+	g_smp_init_done = true;
+
 	sti();
+
+	klog("this is cpu %d", cpu_info->cpu_id);
 
 	for (;;) {
 		__asm__ volatile("hlt");

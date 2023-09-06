@@ -22,8 +22,6 @@ lock_t klog_lock;
 
 void _klog(char *fmt, ...)
 {
-	lock_acquire(&klog_lock);
-
 	va_list ptr;
 	char klog_buffer[4096];
 
@@ -39,6 +37,14 @@ void _klog(char *fmt, ...)
 	uart_write(klog_buffer);
 #endif
 	va_end(ptr);
+}
 
+void _klog_lock(void)
+{
+	lock_acquire(&klog_lock);
+}
+
+void _klog_unlock(void)
+{
 	lock_release(&klog_lock);
 }
