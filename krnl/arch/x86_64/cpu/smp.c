@@ -130,7 +130,23 @@ __attribute__((noreturn)) void smp_ap_entry_point(cpu_t *cpu_info)
 	hpet_wait(10);
 
 	sti();
+
 	for (;;) {
 		__asm__ volatile("hlt");
 	}
+}
+
+cpu_t *smp_cur_cpu(void)
+{
+	cpu_t *cpu;
+	if (g_smp_init_done) {
+		cpu = (cpu_t *)rdmsr(MSR_KERNEL_GS);
+		if (cpu == NULL) {
+			cpu = (cpu_t *)rdmsr(MSR_GS);
+		}
+	} else {
+		return NULL;
+	}
+
+	return cpu;
 }

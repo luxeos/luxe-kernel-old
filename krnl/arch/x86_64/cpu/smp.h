@@ -39,4 +39,6 @@ void smp_init(void);
 
 void smp_ap_entry_point(cpu_t *cpu_info);
 
+cpu_t *smp_cur_cpu(void);
+
 #endif /* __SMP_H_ */

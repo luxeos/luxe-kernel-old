@@ -26,13 +26,13 @@ void arch_init()
 {
 	uart_init();
 	fb_init();
+	display_bootlogo();
 
 	gdt_init(NULL);
 	idt_init();
 
 	phys_init();
 	virt_init();
-	display_bootlogo();
 
 	// device init
 	pit_init();

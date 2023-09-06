@@ -9,6 +9,7 @@
  */
 
 #include <cpu/cpu.h>
+#include <cpu/smp.h>
 
 #include <luxe.h>
 
@@ -26,8 +27,14 @@ char *g_error_name[] = {
 
 __attribute__((noreturn)) void __panic(cpu_regs_t regs, int err)
 {
-	_klog("\npanic(cpu 1, 0x%8.llx): \"%s\" (%s), registers:\n", regs.rip,
-		  g_error_msg[err], g_error_name[err]);
+	cpu_t *cpu = smp_cur_cpu();
+	int cpu_num = 1;
+	if (cpu != NULL) {
+		cpu_num = cpu->cpu_id;
+	}
+
+	_klog("\npanic(cpu %d, 0x%8.llx): \"%s\" (%s), registers:\n", cpu_num,
+		  regs.rip, g_error_msg[err], g_error_name[err]);
 
 	cpu_dump_regs(regs);
 	luxeos_print_ver_str();
