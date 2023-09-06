@@ -26,6 +26,7 @@
 
 #include <luxe/luxe_malloc.h>
 #include <luxe/luxe_vector.h>
+#include <luxe/luxe_lock.h>
 #include <luxe/luxe_version.h>
 
 #include <panic.h>

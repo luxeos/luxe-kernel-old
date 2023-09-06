@@ -10,6 +10,8 @@
 
 #include <boot/boot.h>
 
+#include <luxe.h>
+
 volatile struct limine_memmap_request memmap_request = {
 	.id = LIMINE_MEMMAP_REQUEST,
 	.revision = 0,
@@ -44,3 +46,9 @@ volatile struct limine_kernel_file_request kern_file_request = {
 	.id = LIMINE_KERNEL_FILE_REQUEST,
 	.revision = 0,
 };
+
+// bool boot_parse_cmdline(char *token)
+// {
+// char *token = strtok(kern_file_request.response->kernel_file->cmdline, )
+// return false;
+// }

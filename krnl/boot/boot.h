@@ -12,6 +12,7 @@
 #define __BOOT_H_
 
 #include <boot/limine.h>
+#include <luxe.h>
 
 extern volatile struct limine_memmap_request memmap_request;
 extern volatile struct limine_hhdm_request hhdm_request;
@@ -20,5 +21,7 @@ extern volatile struct limine_rsdp_request rsdp_request;
 extern volatile struct limine_framebuffer_request framebuffer_request;
 extern volatile struct limine_smp_request smp_request;
 extern volatile struct limine_kernel_file_request kern_file_request;
+
+// bool boot_parse_cmdline(char *token);
 
 #endif /* __BOOT_H_ */

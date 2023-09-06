@@ -19,6 +19,8 @@ uint64_t g_free_size = 0;
 
 uint8_t *g_bitmap = NULL;
 
+lock_t phys_mm_lock;
+
 void bitmap_set(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
@@ -126,14 +128,18 @@ void phys_free(uint64_t addr, uint64_t blocks)
 
 uint64_t phys_alloc(uint64_t base, uint64_t blocks)
 {
+	lock_acquire(&phys_mm_lock);
+
 	for (uint64_t i = base; i < g_highest_block; i += BLOCK_SIZE) {
 		if (bitmap_test(i, blocks)) {
 			bitmap_set(i, blocks);
 			g_free_size -= blocks * BLOCK_SIZE;
+			lock_release(&phys_mm_lock);
 			return i;
 		}
 	}
 
+	lock_release(&phys_mm_lock);
 	panic(PHYS_MM_OUT_OF_MEMORY);
 	return 0; // to make GCC happy
 }

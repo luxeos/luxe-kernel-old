@@ -24,6 +24,7 @@ void *kmalloc(uint64_t size)
 	alloc->size = size;
 
 	klog("allocated %i bytes of memory", size);
+
 	return ((uint8_t *)alloc) + BLOCK_SIZE;
 }
 
