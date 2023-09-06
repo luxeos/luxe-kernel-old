@@ -54,3 +54,51 @@ int strlen(const char *str)
 
 	return len;
 }
+
+char *strtok(char *str, char *delim)
+{
+	static char *tmp;
+
+	if (!str) {
+		str = tmp;
+	}
+	if (!str) {
+		return NULL;
+	}
+
+	for (;;) {
+		if (__is_delim(*str, delim)) {
+			str++;
+			continue;
+		}
+		if (*str == '\0') {
+			return NULL;
+		}
+		break;
+	}
+
+	char *ret = str;
+	for (;;) {
+		if (*str == '\0') {
+			tmp = str;
+			return ret;
+		}
+		if (__is_delim(*str, delim)) {
+			*str = '\0';
+			tmp = str + 1;
+			return ret;
+		}
+		str++;
+	}
+}
+
+int __is_delim(char c, char *delim)
+{
+	while (*delim != '\0') {
+		if (c == *delim) {
+			return 1;
+		}
+		delim++;
+	}
+	return 0;
+}

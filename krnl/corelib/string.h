@@ -18,5 +18,8 @@ void memcpy(void *dest, const void *src, size_t n);
 
 int strncmp(const char *s1, const char *s2, size_t n);
 int strlen(const char *str);
+char *strtok(char *str, char *delim);
+
+int __is_delim(char c, char *delim);
 
 #endif /* __STRING_H_ */
