@@ -17,7 +17,7 @@
 #define PIT_CMD 0x43
 
 void pit_init(void);
-void pit_tick(void);
+void pit_handler(void);
 uint64_t pit_get_ticks(void);
 void pit_wait(uint32_t ms);
 

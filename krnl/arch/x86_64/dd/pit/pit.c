@@ -22,12 +22,12 @@ void pit_init(void)
 	outb(PIT_COUNTER0, divisor);
 	outb(PIT_COUNTER0, divisor >> 8);
 
-	irq_register(0, pit_tick);
+	irq_register(0, pit_handler);
 
 	klog("done");
 }
 
-void pit_tick(void)
+void pit_handler(void)
 {
 	g_pit_ticks++;
 }
