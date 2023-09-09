@@ -22,6 +22,6 @@ extern volatile struct limine_framebuffer_request framebuffer_request;
 extern volatile struct limine_smp_request smp_request;
 extern volatile struct limine_kernel_file_request kern_file_request;
 
-// bool boot_parse_cmdline(char *token);
+bool boot_parse_cmdline(char *look_for);
 
 #endif /* __BOOT_H_ */

@@ -20,6 +20,17 @@
 
 lock_t klog_lock;
 
+bool _g_can_use_fb = false;
+
+void klog_init(void)
+{
+#ifndef CONFIG_DEBUG
+	if (boot_parse_cmdline("-v")) {
+		_g_can_use_fb = true;
+	}
+#endif
+}
+
 void _klog(char *fmt, ...)
 {
 	va_list ptr;
@@ -28,14 +39,14 @@ void _klog(char *fmt, ...)
 	va_start(ptr, fmt);
 	vsnprintf((char *)&klog_buffer, -1, fmt, ptr);
 #ifndef CONFIG_DEBUG
-	// if (g_fb_init && boot_parse_cmdline("-v")) {
-	if (g_fb_init) {
-		fb_write(klog_buffer);
+	if (g_fb_init && _g_can_use_fb) {
+		if (g_fb_init) {
+			fb_write(klog_buffer);
+		}
 	}
-	// }
 #else
-	uart_write(klog_buffer);
 #endif
+	uart_write(klog_buffer);
 	va_end(ptr);
 }
 

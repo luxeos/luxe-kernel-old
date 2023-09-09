@@ -12,6 +12,7 @@
 
 void kernel_init(void)
 {
+	klog_init();
 	arch_init();
 
 	klog("Welcome to LuxeOS");

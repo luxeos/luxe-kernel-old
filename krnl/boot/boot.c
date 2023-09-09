@@ -47,8 +47,14 @@ volatile struct limine_kernel_file_request kern_file_request = {
 	.revision = 0,
 };
 
-// bool boot_parse_cmdline(char *token)
-// {
-// char *token = strtok(kern_file_request.response->kernel_file->cmdline, )
-// return false;
-// }
+bool boot_parse_cmdline(char *look_for)
+{
+	char *token;
+	char *cmdline = kern_file_request.response->kernel_file->cmdline;
+
+	(void)look_for;
+	(void)token;
+	(void)cmdline;
+
+	return false;
+}

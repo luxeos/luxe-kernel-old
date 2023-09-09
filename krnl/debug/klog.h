@@ -18,6 +18,8 @@
 		_klog_unlock();                                  \
 	}
 
+void klog_init(void);
+
 void _klog(char *fmt, ...);
 
 void _klog_lock(void);
