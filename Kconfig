@@ -16,6 +16,15 @@ menu "CPU"
 		Maximum number of supported CPUs.
 endmenu
 
+menu "Scheduling"
+	config TIMESLICE
+		int "Timeslice"
+		default 1000000
+		---help---
+		Time frame for every process in nanoseconds.
+		Default translates to 1 millisecond for each process.
+endmenu
+
 choice BUILD_TYPE
 	bool "Build Type"
 	config DEBUG
