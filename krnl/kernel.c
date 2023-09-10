@@ -12,8 +12,7 @@
 #include <proc/scheduler.h>
 #include <luxe.h>
 
-__attribute__((noreturn))
-void sched_test(uint64_t id)
+__attribute__((noreturn)) void sched_test(uint64_t id)
 {
 	(void)id;
 	while (true) {

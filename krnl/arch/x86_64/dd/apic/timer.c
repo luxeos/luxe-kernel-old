@@ -39,7 +39,8 @@ void apic_timer_init(void)
 
 	g_freq = ((UINT32_MAX - _lapic_in(0x390)) * 2) * g_divisor;
 
-	klog("base frequency: %d hz, divisor: %d, irq: %d", g_freq, g_divisor, g_vector);
+	klog("base frequency: %d hz, divisor: %d, irq: %d", g_freq, g_divisor,
+		 g_vector);
 }
 
 void apic_timer_set_handler(void (*handler)(void *))

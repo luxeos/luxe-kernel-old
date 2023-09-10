@@ -24,16 +24,16 @@ lock_t phys_mm_lock = lock_create();
 void bitmap_set(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)]
-            &= ~((1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP)));
+		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)] &=
+			~((1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP)));
 	}
 }
 
 void bitmap_clear(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)]
-            |= 1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP);
+		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)] |=
+			1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP);
 	}
 }
 
@@ -41,7 +41,7 @@ bool bitmap_test(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
 		if (!(g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)] &
-			 (1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP)))) {
+			  (1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP)))) {
 			return false;
 		}
 	}
@@ -146,16 +146,14 @@ uint64_t phys_alloc(uint64_t base, uint64_t blocks)
 
 void phys_dump()
 {
-	uint64_t t = g_total_size, f = g_free_size,
-             u = t - f;
+	uint64_t t = g_total_size, f = g_free_size, u = t - f;
 
-    klog("Physical memory usage:\n"
-            "  Total: %8d KB (%4d MB)\n"
-            "  Free : %8d KB (%4d MB)\n"
-            "  Used : %8d KB (%4d MB)",
-            t / 1024, t / (1024 * 1024),
-            f / 1024, f / (1024 * 1024),
-            u / 1024, u / (1024 * 1024));
+	klog("Physical memory usage:\n"
+		 "  Total: %8d KB (%4d MB)\n"
+		 "  Free : %8d KB (%4d MB)\n"
+		 "  Used : %8d KB (%4d MB)",
+		 t / 1024, t / (1024 * 1024), f / 1024, f / (1024 * 1024), u / 1024,
+		 u / (1024 * 1024));
 }
 
 uint64_t phys_get_total_memory()

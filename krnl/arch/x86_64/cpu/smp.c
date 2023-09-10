@@ -90,7 +90,8 @@ void smp_init(void)
 		klog("startup core %d", g_acpi_lapic[i]->acpi_proc_id);
 		bool is_up = false;
 		for (size_t ipi_count = 0; ipi_count < 2; ipi_count++) {
-			lapic_send_ipi(g_acpi_lapic[i]->apic_id, 0x1000 / BLOCK_SIZE, 0b110);
+			lapic_send_ipi(g_acpi_lapic[i]->apic_id, 0x1000 / BLOCK_SIZE,
+						   0b110);
 			for (size_t wait = 0; wait < 20; wait++) {
 				int current_counter = *g_running_cpus;
 				if (current_counter != ap_cntr) {

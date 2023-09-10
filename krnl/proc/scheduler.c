@@ -21,9 +21,9 @@
 
 lock_t sched_lock = lock_create();
 
-static task_t *g_task_running[CONFIG_CPU_MAX] = {0};
-static task_t *g_task_idling[CONFIG_CPU_MAX] = {0};
-static uint64_t g_task_coord[CONFIG_CPU_MAX] = {0};
+static task_t *g_task_running[CONFIG_CPU_MAX] = { 0 };
+static task_t *g_task_idling[CONFIG_CPU_MAX] = { 0 };
+static uint64_t g_task_coord[CONFIG_CPU_MAX] = { 0 };
 static vector_struct(task_t *) g_task_active = { 0 };
 
 static volatile uint16_t g_cpu_num = 0;
@@ -31,7 +31,8 @@ static volatile uint16_t g_cpu_num = 0;
 void sched_init(const char *name, uint16_t cpu_id)
 {
 	lock_acquire(&sched_lock);
-	g_task_idling[cpu_id] = task_create(name, task_idle, 255, KERNEL_TASK, NULL);
+	g_task_idling[cpu_id] =
+		task_create(name, task_idle, 255, KERNEL_TASK, NULL);
 	lock_release(&sched_lock);
 
 	apic_timer_init();
@@ -48,7 +49,8 @@ void sched_init(const char *name, uint16_t cpu_id)
 task_t *sched_new(const char *name, void (*entry)(uint64_t), bool usermode)
 {
 	lock_acquire(&sched_lock);
-	task_t *t = task_create(name, entry, 0, usermode ? USER_TASK : KERNEL_TASK, NULL);
+	task_t *t =
+		task_create(name, entry, 0, usermode ? USER_TASK : KERNEL_TASK, NULL);
 	lock_release(&sched_lock);
 	return t;
 }
@@ -89,7 +91,7 @@ void sched_ctx_switch(void *stack, int64_t force_switch)
 	if (cur) {
 		cur->stack_top = stack;
 		cur->last_tick = ticks;
-		
+
 		if (cur->status == TASK_RUNNING) {
 			cur->status = TASK_READY;
 		}
@@ -116,9 +118,10 @@ void sched_ctx_switch(void *stack, int64_t force_switch)
 			break;
 		}
 		if (next->status == TASK_SLEEPING) {
-			if ((hpet_get_ns() >= next->wake_time) && (next->wake_time > 0)) { {
-				break;
-			}
+			if ((hpet_get_ns() >= next->wake_time) && (next->wake_time > 0)) {
+				{
+					break;
+				}
 			}
 		}
 		vector_pushback(&g_task_active, next);
@@ -153,12 +156,14 @@ void sched_ctx_switch(void *stack, int64_t force_switch)
 		panic(PANIC_KERNEL_STACK_CORRUPT);
 	}
 
-	sched_ctx_switch_exit(next->stack_top, (next->ads == NULL) ? 0 : VIRT_TO_PHYS((uint64_t)next->ads->pml4));
+	sched_ctx_switch_exit(
+		next->stack_top,
+		(next->ads == NULL) ? 0 : VIRT_TO_PHYS((uint64_t)next->ads->pml4));
 }
 
 task_event_t sched_wait_for_event(task_event_t event)
 {
-	task_event_t e = {0};
+	task_event_t e = { 0 };
 	cpu_t *cpu = smp_cur_cpu(false);
 	if (cpu == NULL) {
 		return e;
@@ -191,7 +196,8 @@ bool sched_resume_event(task_event_t event)
 	for (size_t i = 0; i < vector_length(&g_task_active); i++) {
 		task_t *t = vector_at(&g_task_active, i);
 		if (t) {
-			if (t->status == TASK_SLEEPING && t->wake_event.type == event.type) {
+			if (t->status == TASK_SLEEPING &&
+				t->wake_event.type == event.type) {
 				t->status = TASK_READY;
 				t->wake_event.para = event.para;
 				ret = true;
@@ -202,7 +208,6 @@ bool sched_resume_event(task_event_t event)
 	lock_release(&sched_lock);
 	return ret;
 }
-
 
 uint64_t _sched_get_ticks()
 {
@@ -277,15 +282,15 @@ void sched_sleep(uint64_t millis)
 	lock_acquire(&sched_lock);
 
 	uint16_t cpu_id = cpu->cpu_id;
-    task_t *curr = g_task_running[cpu_id];
-    if (curr) {
-        curr->wake_time = hpet_get_ns() + (millis * 1000000);
-        curr->wake_event.type = EVENT_UNDEFINED;
-        curr->status = TASK_SLEEPING;
-        if (curr->id < 1) {
-            panic(ERR_UNKNOWN);
-        }
-    }
+	task_t *curr = g_task_running[cpu_id];
+	if (curr) {
+		curr->wake_time = hpet_get_ns() + (millis * 1000000);
+		curr->wake_event.type = EVENT_UNDEFINED;
+		curr->status = TASK_SLEEPING;
+		if (curr->id < 1) {
+			panic(ERR_UNKNOWN);
+		}
+	}
 
 	lock_release(&sched_lock);
 	sched_ctx_switch_force();

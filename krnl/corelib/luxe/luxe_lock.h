@@ -18,7 +18,7 @@ typedef volatile struct {
 	uint64_t rflags;
 } lock_t;
 
-#define lock_create() ((lock_t){0,0})
+#define lock_create() ((lock_t){ 0, 0 })
 
 void lock_acquire(lock_t *lock);
 void lock_release(lock_t *lock);

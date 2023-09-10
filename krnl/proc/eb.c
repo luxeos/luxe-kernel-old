@@ -27,10 +27,7 @@ bool eb_publish(uint64_t id, event_type_t type, uint64_t para)
 	}
 
 	task_event_t e = {
-		.pub_id = id,
-		.sub_id = TASKID_MAX,
-		.type = type,
-		.para = para
+		.pub_id = id, .sub_id = TASKID_MAX, .type = type, .para = para
 	};
 	e.timestamp = hpet_get_ns();
 
@@ -39,7 +36,8 @@ bool eb_publish(uint64_t id, event_type_t type, uint64_t para)
 	lock_release(&eb_lock);
 
 #ifdef CONFIG_DEBUG
-	klog("task %d published\tpara 0x%.8llx, type 0x%.8llx, millis %d, ticks %d", id, para, type, hpet_get_ns() / 1000000, _sched_get_ticks());
+	klog("task %d published\tpara 0x%.8llx, type 0x%.8llx, millis %d, ticks %d",
+		 id, para, type, hpet_get_ns() / 1000000, _sched_get_ticks());
 #endif
 
 	return true;
@@ -52,10 +50,7 @@ bool eb_subscribe(uint64_t id, event_type_t type, uint64_t *para)
 	}
 
 	task_event_t e = {
-		.pub_id = TASKID_MAX,
-		.sub_id = id,
-		.type = type,
-		.para = 0
+		.pub_id = TASKID_MAX, .sub_id = id, .type = type, .para = 0
 	};
 	e.timestamp = hpet_get_ns();
 
@@ -67,7 +62,9 @@ bool eb_subscribe(uint64_t id, event_type_t type, uint64_t *para)
 	*para = e.para;
 
 #ifdef CONFIG_DEBUG
-	klog("task %d subscribed\tpara 0x%.8llx, type 0x%.8llx, millis %d, ticks %d", id, para, type, hpet_get_ns() / 1000000, _sched_get_ticks());
+	klog(
+		"task %d subscribed\tpara 0x%.8llx, type 0x%.8llx, millis %d, ticks %d",
+		id, para, type, hpet_get_ns() / 1000000, _sched_get_ticks());
 #endif
 
 	return true;

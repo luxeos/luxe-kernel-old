@@ -11,7 +11,6 @@
 #ifndef __LUXE_ERR_H_
 #define __LUXE_ERR_H_
 
-
 // clang-format off
 typedef enum {
 	PHYS_MM_OUT_OF_MEMORY = 0,
