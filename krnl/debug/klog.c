@@ -38,15 +38,17 @@ void _klog(char *fmt, ...)
 
 	va_start(ptr, fmt);
 	vsnprintf((char *)&klog_buffer, -1, fmt, ptr);
-#ifndef CONFIG_DEBUG
-	if (g_fb_init && _g_can_use_fb) {
-		if (g_fb_init) {
-			fb_write(klog_buffer);
-		}
-	}
-#else
-#endif
+
+	lock_acquire(&klog_lock);
 	uart_write(klog_buffer);
+#ifndef CONFIG_DEBUG
+	// if (g_fb_init && _g_can_use_fb) {
+	if (g_fb_init) {
+		fb_write(klog_buffer);
+	}
+	// }
+#endif
+	lock_release(&klog_lock);
 	va_end(ptr);
 }
 
