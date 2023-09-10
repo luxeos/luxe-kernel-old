@@ -15,6 +15,7 @@
 #include <int/idt.h>
 #include <dd/uart/uart.h>
 #include <dd/apic/apic.h>
+#include <dd/apic/timer.h>
 #include <dd/pit/pit.h>
 #include <dd/fb/fb.h>
 #include <mem/phys.h>
@@ -34,7 +35,7 @@ void arch_init()
 	phys_init();
 	virt_init();
 
-	// device init
+	// irq devices init
 	pit_init();
 
 	acpi_init();

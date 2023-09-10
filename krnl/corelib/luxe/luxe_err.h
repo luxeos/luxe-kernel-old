@@ -11,10 +11,15 @@
 #ifndef __LUXE_ERR_H_
 #define __LUXE_ERR_H_
 
+
+// clang-format off
 typedef enum {
 	PHYS_MM_OUT_OF_MEMORY = 0,
-
-	ASSERT_FAILED
+	ASSERT_FAILED,
+	PANIC_KERNEL_STACK_CORRUPT,
+	TASK_HAS_CORRUPT_ID,
+	ERR_UNKNOWN
 } err_msg_t;
+// clang-format on
 
 #endif /* __LUXE_ERR_H_ */

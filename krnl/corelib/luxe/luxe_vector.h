@@ -18,10 +18,6 @@
 		type *data;         \
 	}
 
-#define vector_extern(type, name) extern vector_struct(type) name
-#define vector(type, name) vector_struct(type) name = { 0 }
-#define vector_static(type, name) static vector(type, name)
-
 #define vector_pushback(vec, elem)                           \
 	{                                                        \
 		(vec)->len++;                                        \

@@ -11,6 +11,7 @@
 #include <acpi/hpet.h>
 #include <dd/apic/lapic.h>
 #include <dd/apic/timer.h>
+#include <int/idt.h>
 #include <int/irq.h>
 
 #include <luxe.h>
@@ -41,8 +42,19 @@ void apic_timer_init(void)
 	klog("base frequency: %d hz, divisor: %d, irq: %d", g_freq, g_divisor, g_vector);
 }
 
+void apic_timer_set_handler(void (*handler)(void *))
+{
+	idt_set_entry(g_irq, (uint64_t)handler, IDT_INT_GATE);
+}
+
 void apic_timer_handler(void)
 {
+}
+
+void apic_timer_start(void)
+{
+	uint32_t lvt = _lapic_in(0x320);
+	_lapic_out(0x320, lvt & ~(1 << 16));
 }
 
 void apic_timer_set_mode(int mode)

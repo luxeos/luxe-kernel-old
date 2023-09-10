@@ -19,28 +19,28 @@ uint64_t g_free_size = 0;
 
 uint8_t *g_bitmap = NULL;
 
-lock_t phys_mm_lock;
+lock_t phys_mm_lock = lock_create();
 
 void bitmap_set(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)] |=
-			1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP);
+		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)]
+            &= ~((1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP)));
 	}
 }
 
 void bitmap_clear(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)] &=
-			~((1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP)));
+		g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)]
+            |= 1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP);
 	}
 }
 
 bool bitmap_test(uint64_t addr, uint64_t blocks)
 {
 	for (uint64_t i = addr; i < addr + (blocks * BLOCK_SIZE); i += BLOCK_SIZE) {
-		if ((g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)] &
+		if (!(g_bitmap[i / (BLOCK_SIZE * BLOCKS_PER_BITMAP)] &
 			 (1 << ((i / BLOCK_SIZE) % BLOCKS_PER_BITMAP)))) {
 			return false;
 		}
@@ -88,7 +88,7 @@ void phys_init()
 		}
 	}
 
-	memset(g_bitmap, 0xff, bm_size);
+	memset(g_bitmap, 0, bm_size);
 	klog("memory bitmap address: 0x%llx", g_bitmap);
 
 	for (size_t i = 0; i < mmap->entry_count; i++) {
@@ -142,6 +142,20 @@ uint64_t phys_alloc(uint64_t base, uint64_t blocks)
 	lock_release(&phys_mm_lock);
 	panic(PHYS_MM_OUT_OF_MEMORY);
 	return 0; // to make GCC happy
+}
+
+void phys_dump()
+{
+	uint64_t t = g_total_size, f = g_free_size,
+             u = t - f;
+
+    klog("Physical memory usage:\n"
+            "  Total: %8d KB (%4d MB)\n"
+            "  Free : %8d KB (%4d MB)\n"
+            "  Used : %8d KB (%4d MB)",
+            t / 1024, t / (1024 * 1024),
+            f / 1024, f / (1024 * 1024),
+            u / 1024, u / (1024 * 1024));
 }
 
 uint64_t phys_get_total_memory()

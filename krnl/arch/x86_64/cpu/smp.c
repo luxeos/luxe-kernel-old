@@ -18,6 +18,7 @@
 #include <dd/pit/pit.h>
 #include <mem/phys.h>
 #include <mem/virt.h>
+#include <proc/scheduler.h>
 
 #include <luxe.h>
 
@@ -89,7 +90,7 @@ void smp_init(void)
 		klog("startup core %d", g_acpi_lapic[i]->acpi_proc_id);
 		bool is_up = false;
 		for (size_t ipi_count = 0; ipi_count < 2; ipi_count++) {
-			lapic_send_ipi(g_acpi_lapic[i]->apic_id, 1, 0b110);
+			lapic_send_ipi(g_acpi_lapic[i]->apic_id, 0x1000 / BLOCK_SIZE, 0b110);
 			for (size_t wait = 0; wait < 20; wait++) {
 				int current_counter = *g_running_cpus;
 				if (current_counter != ap_cntr) {
@@ -112,6 +113,13 @@ void smp_init(void)
 		g_smp_info->cpu_count++;
 	}
 
+	for (;;) {
+		if (sched_get_cpu_count() == g_smp_info->cpu_count - 1) {
+			break;
+		}
+		hpet_wait(1);
+	}
+
 	virt_unmap(NULL, 0, NUM_BLOCKS(0x100000));
 	g_smp_init_done = true;
 	klog("done");
@@ -125,32 +133,33 @@ __attribute__((noreturn)) void smp_ap_entry_point(cpu_t *cpu_info)
 	wrmsr(MSR_GS, (uint64_t)cpu_info);
 	wrmsr(MSR_KERNEL_GS, (uint64_t)cpu_info);
 
-	_lapic_out(LAPIC_SVR, 0x100 | 0xff);
+	_lapic_out(0xf0, (1 << 8) | 0xff);
 
 	hpet_wait(10);
 
-	g_smp_init_done = true;
+	sched_init("init", cpu_info->cpu_id);
 
 	sti();
-
-	klog("this is cpu %d", cpu_info->cpu_id);
 
 	for (;;) {
 		__asm__ volatile("hlt");
 	}
 }
 
-cpu_t *smp_cur_cpu(void)
+cpu_t *smp_cur_cpu(bool force)
 {
-	cpu_t *cpu;
-	if (g_smp_init_done) {
-		cpu = (cpu_t *)rdmsr(MSR_KERNEL_GS);
+	if (g_smp_init_done || force) {
+		cpu_t *cpu = (cpu_t *)rdmsr(MSR_KERNEL_GS);
 		if (cpu == NULL) {
 			cpu = (cpu_t *)rdmsr(MSR_GS);
 		}
+		return cpu;
 	} else {
 		return NULL;
 	}
+}
 
-	return cpu;
+const smp_t *_smp_get_info(void)
+{
+	return g_smp_info;
 }

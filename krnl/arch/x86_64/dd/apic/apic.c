@@ -30,6 +30,8 @@ void apic_init(void)
 
 	ioapic_set_entry(madt_get_iso(IRQ_PIT), (0x20 + IRQ_PIT));
 
+	_lapic_out(0xf0, (1 << 8) | 0xff);
+
 	klog("done");
 }
 

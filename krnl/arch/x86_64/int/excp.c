@@ -56,7 +56,7 @@ void excp_handler(int_frame_t frame)
 	if (frame.vector < 0x20) {
 		_klog_lock();
 
-		cpu_t *cpu = smp_cur_cpu();
+		cpu_t *cpu = smp_cur_cpu(false);
 		int cpu_num = 1;
 		if (cpu != NULL) {
 			cpu_num += cpu->cpu_id;

@@ -38,7 +38,15 @@ typedef struct {
 typedef struct {
 	uint64_t *pml4;
 	vector_struct(uint64_t) mem_list;
+	lock_t lock;
 } addr_space_t;
+
+typedef struct {
+	void *virt_start;
+	void *phys_start;
+	size_t size;
+	int block_flags;
+} __attribute__((packed)) addr_space_node_t;
 
 void virt_init();
 

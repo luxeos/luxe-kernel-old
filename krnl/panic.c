@@ -16,12 +16,18 @@
 // clang-format off
 char *g_error_msg[] = {
 	"Out of Physical Memory",
-	"Assertion Failed"
+	"Assertion Failed",
+	"Kernel Stack Corrupted",
+	"Task has corrupted ID",
+	"Unknown"
 };
 
 char *g_error_name[] = {
 	"PHYS_MM_OUT_OF_MEMORY",
-	"ASSERT_FAILED"
+	"ASSERT_FAILED",
+	"PANIC_KERNEL_STACK_CORRUPT",
+	"TASK_HAS_CORRUPT_ID",
+	"ERR_UNKNOWN"
 };
 // clang-format on
 
@@ -29,7 +35,7 @@ __attribute__((noreturn)) void __panic(cpu_regs_t regs, int err)
 {
 	_klog_lock();
 
-	cpu_t *cpu = smp_cur_cpu();
+	cpu_t *cpu = smp_cur_cpu(false);
 	int cpu_num = 1;
 	if (cpu != NULL) {
 		cpu_num += cpu->cpu_id;

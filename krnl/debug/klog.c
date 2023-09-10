@@ -18,7 +18,7 @@
 
 #include <luxe.h>
 
-lock_t klog_lock;
+lock_t klog_lock = lock_create();
 
 bool _g_can_use_fb = false;
 

@@ -11,12 +11,18 @@
 #ifndef __TIMER_H_
 #define __TIMER_H_
 
+#include <luxe.h>
+
 enum {
 	APIC_TIMER_PERIODIC = 1,
 	APIC_TIMER_ONESHOT,
 };
 
 void apic_timer_init(void);
+void apic_timer_start(void);
+
+void apic_timer_set_handler(void (*handler)(void *));
+
 void apic_timer_set_mode(int mode);
 void apic_timer_set_freq(uint64_t ns);
 

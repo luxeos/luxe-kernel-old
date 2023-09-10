@@ -34,6 +34,8 @@ void phys_init();
 uint64_t phys_alloc(uint64_t base, uint64_t blocks);
 void phys_free(uint64_t addr, uint64_t blocks);
 
+void phys_dump();
+
 uint64_t phys_get_total_memory();
 uint64_t phys_get_free_memory();
 uint64_t phys_get_highest_block();

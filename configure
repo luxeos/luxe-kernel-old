@@ -47,7 +47,7 @@ x86_64_cflags="-m64 -march=x86-64 -mabi=sysv -mno-80387 -mno-mmx -mno-sse -mno-s
 x86_64_asflags="-felf64"
 x86_64_ldflags="-melf_x86_64"
 
-x86_64_qemuflags="-M q35 -m 2G -smp 4 -serial stdio -no-reboot -cdrom \$(RELEASE_ISO) -bios aux/ovmf-\$(ARCH).fd"
+x86_64_qemuflags="-M q35,smm=off -m 2G -smp 4 -serial stdio -no-reboot -cdrom \$(RELEASE_ISO) -bios aux/ovmf-\$(ARCH).fd"
 
 ########################################
 ### GENERAL

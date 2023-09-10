@@ -16,9 +16,7 @@
 
 static addr_space_t g_kern_ads = { 0 };
 
-vector_static(mem_map_t, mmap_list);
-
-lock_t virt_mm_lock;
+vector_struct(mem_map_t) mmap_list = { 0 };
 
 void virt_init()
 {
@@ -58,6 +56,9 @@ void virt_init()
 				 PHYS_TO_VIRT(entry->base));
 			break;
 		}
+		case LIMINE_MEMMAP_BOOTLOADER_RECLAIMABLE: {
+			break;
+		}
 		case LIMINE_MEMMAP_RESERVED: {
 			klog("refusing to map reserved memory at 0x%llx", entry->base);
 			break;
@@ -82,8 +83,6 @@ void virt_init()
 void virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
 			  uint64_t np, uint64_t flags)
 {
-	lock_acquire(&virt_mm_lock);
-
 	if (ads == NULL) {
 		mem_map_t mm = { virt_addr, phys_addr, flags, np };
 		vector_pushback(&mmap_list, mm);
@@ -92,8 +91,6 @@ void virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
 	for (size_t i = 0; i < np * BLOCK_SIZE; i += BLOCK_SIZE) {
 		__virt_map(ads, virt_addr + i, phys_addr + i, flags);
 	}
-
-	lock_release(&virt_mm_lock);
 }
 
 void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np)
@@ -116,8 +113,6 @@ void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np)
 
 addr_space_t *create_ads()
 {
-	lock_acquire(&virt_mm_lock);
-
 	addr_space_t *as = kmalloc(sizeof(addr_space_t));
 	if (!as)
 		return NULL;
@@ -126,10 +121,10 @@ addr_space_t *create_ads()
 	as->pml4 = kmalloc(BLOCK_SIZE * 8);
 	if (!as->pml4) {
 		kfree(as);
-		lock_release(&virt_mm_lock);
 		return NULL;
 	}
 	memset(as->pml4, 0, BLOCK_SIZE * 8);
+	as->lock = lock_create();
 
 	size_t len = vector_length(&mmap_list);
 	for (size_t i = 0; i < len; i++) {
@@ -137,7 +132,6 @@ addr_space_t *create_ads()
 		virt_map(as, m.virt_addr, m.phys_addr, m.np, m.flags);
 	}
 
-	lock_release(&virt_mm_lock);
 	return as;
 }
 
