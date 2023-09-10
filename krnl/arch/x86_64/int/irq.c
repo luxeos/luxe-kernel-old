@@ -10,7 +10,6 @@
 
 #include <int/idt.h>
 #include <int/irq.h>
-#include <cpu/cpu.h>
 
 #include <luxe.h>
 

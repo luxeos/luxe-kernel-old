@@ -8,29 +8,40 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <luxe.h>
-
 #include <acpi/acpi.h>
-#include <dd/apic/apic.h>
-#include <dd/uart/uart.h>
+#include <boot/bootlogo.h>
 #include <cpu/gdt.h>
 #include <cpu/smp.h>
+#include <int/idt.h>
+#include <dd/uart/uart.h>
+#include <dd/apic/apic.h>
+#include <dd/apic/timer.h>
+#include <dd/pit/pit.h>
+#include <dd/fb/fb.h>
 #include <mem/phys.h>
 #include <mem/virt.h>
-#include <int/idt.h>
+
+#include <luxe.h>
 
 void arch_init()
 {
 	uart_init();
+	fb_init();
+	display_bootlogo();
 
-	gdt_init();
+	gdt_init(NULL);
 	idt_init();
 
 	phys_init();
 	virt_init();
 
+	// irq devices init
+	pit_init();
+
 	acpi_init();
 	apic_init();
+
+	sti();
 
 	smp_init();
 }

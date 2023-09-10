@@ -11,36 +11,35 @@
 #ifndef __IDT_H_
 #define __IDT_H_
 
-#include <cpu/cpu.h>
-
 #include <luxe.h>
 
 #define IDT_MAX_ENTRIES 256
 
-typedef struct {
-	uint16_t addr_low; // 0:15 handler
-	uint16_t selector; // kernel cs
-	uint8_t ist; // always zero for now
-	uint8_t flags;
-	uint16_t addr_mid; // 16:31 handler
-	uint32_t addr_upper; // 32:63 handler
-	uint32_t reserved; // always zero
-} __attribute__((packed)) idt_t;
+#define IDT_INT_GATE 0x8e
+#define IDT_TRAP_GATE 0x8f
 
 typedef struct {
-	uint16_t limit;
+	uint16_t base_lo;
+	uint16_t cs;
+	uint8_t ist;
+	uint8_t flags;
+	uint16_t base_mid;
+	uint32_t base_hi;
+	uint32_t reserved;
+} __attribute__((packed)) idt_desc_t;
+
+typedef struct {
+	uint16_t size;
 	uint64_t base;
 } __attribute__((packed)) idtr_t;
 
 typedef void (*interrupt_handler)();
 
+extern void _idt_load(idtr_t *idtr);
 extern interrupt_handler g_int_handlers[16];
 
 void idt_init();
+
 void idt_set_entry(uint8_t vector, uint64_t handler, uint8_t flags);
-
-void int_handler(uint64_t rsp);
-
-extern void _idt_load(idtr_t *idtr);
 
 #endif /* __IDT_H_ */

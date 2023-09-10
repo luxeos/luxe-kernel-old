@@ -8,12 +8,12 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __LUXE_STATUS_H_
-#define __LUXE_STATUS_H_
+#ifndef __MMIO_H_
+#define __MMIO_H_
 
-typedef int luxe_status_t;
+#include <luxe.h>
 
-#define luxe_success 0 // Function returned successfully
-#define luxe_error -255 // Unknown error
+void mmio_write(void *reg, uint32_t val);
+uint32_t mmio_read(void *reg);
 
-#endif /* __LUXE_STATUS_H_ */
+#endif /* __MMIO_H_ */

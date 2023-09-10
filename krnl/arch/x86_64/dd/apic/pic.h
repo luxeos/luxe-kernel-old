@@ -11,17 +11,19 @@
 #ifndef __PIC_H_
 #define __PIC_H_
 
-#include <luxe.h>
-
-#define PIC1_COMD 0x20
+#define PIC1_CMD 0x20
 #define PIC1_DATA 0x21
-#define PIC2_COMD 0xA0
-#define PIC2_DATA 0xA1
+#define PIC2_CMD 0xa0
+#define PIC2_DATA 0xa1
 
-#define PIC_REMAP_OFFSET 0x20
+#define ICW1_ICW4 0x01
+#define ICW1_INIT 0x10
 
-void pic_remap();
-void pic_mask(uint8_t irq);
+#define ICW4_8086 0x01
+
+#define PIC_OFFSET 0x20
+
+void pic_init();
 void pic_disable();
 
 #endif /* __PIC_H_ */

@@ -9,41 +9,21 @@
  */
 
 #include <cpu/cpu.h>
-#include <debug/sym.h>
 
 #include <luxe.h>
 
-void backtrace()
+void cpu_dump_regs(cpu_regs_t regs)
 {
-	uint64_t *base;
-	__asm__ volatile("mov %%rbp, %0" : "=g"(base)::"memory");
-
-	for (int i = 0;; i++) {
-		base = (uint64_t *)*base;
-		uint64_t return_addr = *(base + 1);
-
-		if (return_addr == (uint64_t)NULL || base == NULL ||
-			return_addr < (uint64_t)0xffffffff80000000) {
-			break;
-		}
-
-		int idx = _sym_get_index(return_addr);
-		if (idx < 0) {
-			_klog("    [%.16lx]  <\?\?\?>\n", return_addr);
-		} else {
-			_klog("    [%.16lx]  <%s+0x%04x>\n", return_addr, _symtab[idx].name,
-				  return_addr - _symtab[idx].addr);
-		}
-	}
-}
-
-int _sym_get_index(uint64_t addr)
-{
-	for (int i = 0; _symtab[i].addr < UINTPTR_MAX; i++) {
-		if (_symtab[i].addr < addr && _symtab[i + 1].addr >= addr) {
-			return i;
-		}
-	}
-
-	return -255;
+	_klog("cr0: 0x%.16llx, cr2: 0x%.16llx, cr3: 0x%.16llx, cr4: 0x%.16llx\n",
+		  read_cr0(), read_cr2(), read_cr3(), read_cr4());
+	_klog("rax: 0x%.16llx, rbx: 0x%.16llx, rcx: 0x%.16llx, rdx: 0x%.16llx\n",
+		  regs.rax, regs.rbx, regs.rcx, regs.rdx);
+	_klog("rsp: 0x%.16llx, rbp: 0x%.16llx, rsi: 0x%.16llx, rdi: 0x%.16llx\n",
+		  regs.rsp, regs.rbp, regs.rsi, regs.rdi);
+	_klog("r8:  0x%.16llx, r9:  0x%.16llx, r10: 0x%.16llx, r11: 0x%.16llx\n",
+		  regs.r8, regs.r9, regs.r10, regs.r11);
+	_klog("r12: 0x%.16llx, r13: 0x%.16llx, r14: 0x%.16llx, r15: 0x%.16llx\n",
+		  regs.r12, regs.r13, regs.r14, regs.r15);
+	_klog("rfl: 0x%.16llx, rip: 0x%.16llx, cs:  0x%.16llx, ss:  0x%.16llx\n",
+		  regs.rflags, regs.rip, regs.cs, regs.ss);
 }

@@ -11,10 +11,13 @@
 #ifndef __ASSERT_H_
 #define __ASSERT_H_
 
+#include <luxe/luxe_err.h>
 #include <panic.h>
 
-#define assert(expr) \
-	if (!(expr))     \
-	panic()
+#define assert(expr)                                                \
+	if (!(expr)) {                                                  \
+		_klog("\n\nAssertion failed at %s:%d", __FILE__, __LINE__); \
+		panic(ASSERT_FAILED);                                       \
+	}
 
 #endif /* __ASSERT_H_ */

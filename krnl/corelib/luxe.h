@@ -22,13 +22,18 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include <luxe/luxe_err.h>
+
+#include <luxe/luxe_malloc.h>
+#include <luxe/luxe_vector.h>
+#include <luxe/luxe_lock.h>
+#include <luxe/luxe_version.h>
+
+#include <panic.h>
+
 #if defined(CONFIG_X86_64)
 #include <luxe/x86_64/luxe_asm.h>
 #endif
-
-#include <luxe/luxe_status.h>
-#include <luxe/luxe_malloc.h>
-#include <luxe/luxe_vector.h>
 
 #define MAX(a, b)               \
 	({                          \

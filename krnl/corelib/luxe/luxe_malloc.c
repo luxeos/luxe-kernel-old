@@ -10,6 +10,7 @@
 
 #include <boot/boot.h>
 #include <mem/phys.h>
+#include <mem/virt.h>
 #include <stdint.h>
 
 #include "luxe_malloc.h"
@@ -22,6 +23,8 @@ void *kmalloc(uint64_t size)
 	alloc->numblocks = NUM_BLOCKS(size);
 	alloc->size = size;
 
+	klog("allocated %i bytes of memory", size);
+
 	return ((uint8_t *)alloc) + BLOCK_SIZE;
 }
 
@@ -30,6 +33,7 @@ void kfree(void *addr)
 	memory_metadata_t *d = (memory_metadata_t *)((uint8_t *)addr - BLOCK_SIZE);
 
 	phys_free(VIRT_TO_PHYS(d), d->numblocks + 1);
+	klog("freed %i bytes of memory", d->size);
 }
 
 void *krealloc(void *addr, size_t newsize)
@@ -52,5 +56,6 @@ void *krealloc(void *addr, size_t newsize)
 		memcpy(new, addr, d->size);
 
 	kfree(addr);
+	klog("reallocated %i bytes of memory", newsize);
 	return new;
 }

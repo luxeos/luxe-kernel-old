@@ -9,12 +9,39 @@
  */
 
 #include <dd/pit/pit.h>
+#include <int/irq.h>
 
 #include <luxe.h>
 
-static uint64_t g_pit_ticks = 0;
+volatile uint32_t g_pit_ticks;
 
-void pit_tick()
+void pit_init(void)
+{
+	uint32_t divisor = 1193182 / 1000;
+	outb(PIT_CMD, 0x76);
+	outb(PIT_COUNTER0, divisor);
+	outb(PIT_COUNTER0, divisor >> 8);
+
+	irq_register(0, pit_handler);
+
+	klog("done");
+}
+
+void pit_handler(void)
 {
 	g_pit_ticks++;
+}
+
+uint64_t pit_get_ticks(void)
+{
+	return g_pit_ticks;
+}
+
+void pit_wait(uint32_t ms)
+{
+	uint32_t now = g_pit_ticks;
+	++ms;
+
+	while (g_pit_ticks - now < ms)
+		;
 }

@@ -11,10 +11,12 @@
 #ifndef __PANIC_H_
 #define __PANIC_H_
 
-#define panic() _panic()
+#include <cpu/cpu.h>
 
-void _panic();
+extern void panic(int err);
 
-void wizard_show();
+void __panic(cpu_regs_t regs, int err);
+
+void luxeos_print_ver_str(void);
 
 #endif /* __PANIC_H_ */

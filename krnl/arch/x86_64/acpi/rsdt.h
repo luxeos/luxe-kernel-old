@@ -12,24 +12,6 @@
 #define __RSDT_H_
 
 #include <acpi/acpi.h>
-#include <acpi/madt.h>
-#include <luxe.h>
-
-typedef struct {
-	char signature[8]; // "RSDT PTR "
-	uint8_t checksum;
-	char oem_id[6];
-	uint8_t revision;
-	uint32_t rsdt_addr;
-} __attribute__((packed)) rsdp_t;
-
-typedef struct {
-	rsdp_t rsdp;
-	uint32_t length;
-	uint64_t xsdt_addr;
-	uint8_t checksum;
-	uint8_t reserved[3];
-} __attribute__((packed)) xsdp_t;
 
 typedef struct {
 	sdt_t header;
@@ -41,8 +23,9 @@ typedef struct {
 	uint64_t sdt[];
 } __attribute__((packed)) xsdt_t;
 
-void rsdt_init(bool use_xsdt);
+extern xsdt_t *g_xsdt;
+extern rsdt_t *g_rsdt;
 
-void *_rsdt_find_sdt(bool use_xsdt, char *signature);
+void rsdt_init();
 
 #endif /* __RSDT_H_ */

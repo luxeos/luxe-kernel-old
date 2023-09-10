@@ -15,8 +15,7 @@
 
 #define COM1 0x3F8
 
-luxe_status_t uart_init();
-
+void uart_init();
 void uart_write(char *str);
 
 #endif /* __UART_H_ */

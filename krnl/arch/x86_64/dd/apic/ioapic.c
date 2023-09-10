@@ -8,19 +8,23 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <dd/apic/ioapic.h>
 #include <acpi/madt.h>
+#include <dd/apic/ioapic.h>
 #include <mem/mmio.h>
+#include <mem/phys.h>
+#include <mem/virt.h>
 
 #include <luxe.h>
 
 void ioapic_init()
 {
-	uint32_t entries_count = ioapic_in(IOAPICVER);
-	uint32_t count = ((entries_count >> 16) & 0xff) + 1;
-	klog("%d ioapic pins", count);
+	virt_map(NULL, (uint64_t)g_ioapic_addr, VIRT_TO_PHYS(g_ioapic_addr), 1,
+			 VIRT_FLAGS_MMIO);
 
-	for (uint32_t i = 0; i < count; ++i) {
+	uint32_t max_redir_entries = ((_ioapic_in(IOAPICVER) >> 16) & 0xff) + 1;
+
+	klog("ioapic pins: %d", max_redir_entries);
+	for (uint32_t i = 0; i < max_redir_entries; ++i) {
 		ioapic_set_entry(i, 1 << 16);
 	}
 
@@ -29,18 +33,18 @@ void ioapic_init()
 
 void ioapic_set_entry(uint8_t index, uint64_t data)
 {
-	ioapic_out(IOREDTBL + index * 2, (uint32_t)data);
-	ioapic_out(IOREDTBL + index * 2 + 1, (uint32_t)(data >> 32));
+	_ioapic_out(IOREDTBL + index * 2, (uint32_t)data);
+	_ioapic_out(IOREDTBL + index * 2 + 1, (uint32_t)(data >> 32));
 }
 
-uint32_t ioapic_in(uint8_t reg)
+uint32_t _ioapic_in(uint8_t reg)
 {
-	mmio_write(get_ioapic_addr() + IOREGSEL, reg);
-	return mmio_read(get_ioapic_addr() + IOWIN);
+	mmio_write((void *)(g_ioapic_addr + IOREGSEL), reg);
+	return mmio_read((void *)(g_ioapic_addr + IOWIN));
 }
 
-void ioapic_out(uint8_t reg, uint32_t value)
+void _ioapic_out(uint8_t reg, uint32_t val)
 {
-	mmio_write(get_ioapic_addr() + IOREGSEL, reg);
-	mmio_write(get_ioapic_addr() + IOWIN, value);
+	mmio_write((void *)(g_ioapic_addr + IOREGSEL), reg);
+	mmio_write((void *)(g_ioapic_addr + IOWIN), val);
 }

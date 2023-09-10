@@ -15,6 +15,8 @@
 
 #include <luxe.h>
 
+#define MEM_VIRT_OFF hhdm_request.response->offset
+
 #define VIRT_FLAG_PRESENT (1 << 0)
 #define VIRT_FLAG_RW (1 << 1)
 #define VIRT_FLAG_USER (1 << 2)
@@ -36,19 +38,27 @@ typedef struct {
 typedef struct {
 	uint64_t *pml4;
 	vector_struct(uint64_t) mem_list;
+	lock_t lock;
 } addr_space_t;
+
+typedef struct {
+	void *virt_start;
+	void *phys_start;
+	size_t size;
+	int block_flags;
+} __attribute__((packed)) addr_space_node_t;
 
 void virt_init();
 
 void virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
-			  uint64_t np, uint64_t flags, bool us);
-void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np, bool us);
+			  uint64_t np, uint64_t flags);
+void virt_unmap(addr_space_t *ads, uint64_t virt_addr, uint64_t np);
 
 addr_space_t *create_ads();
 
-void _virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
-			   uint64_t flags);
-void _virt_unmap(addr_space_t *ads, uint64_t virt_addr);
+void __virt_map(addr_space_t *ads, uint64_t virt_addr, uint64_t phys_addr,
+				uint64_t flags);
+void __virt_unmap(addr_space_t *ads, uint64_t virt_addr);
 uint64_t virt_get_phys_addr(addr_space_t *ads, uint64_t virt_addr);
 
 #endif /* __VIRT_H_ */

@@ -72,9 +72,21 @@ static inline uint64_t read_cr4()
 	return cr4;
 }
 
+static inline uint64_t read_cr8()
+{
+	uint64_t cr8;
+	__asm__ volatile("mov %%cr8, %0" : "=r"(cr8));
+	return cr8;
+}
+
 static inline void write_cr0(uint64_t value)
 {
 	__asm__ volatile("mov %0, %%cr0" ::"r"(value) : "memory");
+}
+
+static inline void write_cr2(uint64_t value)
+{
+	__asm__ volatile("mov %0, %%cr2" ::"r"(value) : "memory");
 }
 
 static inline void write_cr3(uint64_t value)
@@ -85,6 +97,16 @@ static inline void write_cr3(uint64_t value)
 static inline void write_cr4(uint64_t value)
 {
 	__asm__ volatile("mov %0, %%cr4" ::"r"(value) : "memory");
+}
+
+static inline void write_cr8(uint64_t value)
+{
+	__asm__ volatile("mov %0, %%cr8" ::"r"(value) : "memory");
+}
+
+static inline void cli()
+{
+	__asm__ volatile("cli");
 }
 
 static inline void sti()

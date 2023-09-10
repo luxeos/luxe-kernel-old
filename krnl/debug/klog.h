@@ -11,8 +11,13 @@
 #ifndef __KLOG_H_
 #define __KLOG_H_
 
-#define klog(fmt, ...) _klog("%s: " fmt "\n", __func__, ##__VA_ARGS__)
+#define klog(fmt, ...) _klog("%s: " fmt "\n", __func__, ##__VA_ARGS__);
+
+void klog_init(void);
 
 void _klog(char *fmt, ...);
+
+void _klog_lock(void);
+void _klog_unlock(void);
 
 #endif /* __KLOG_H_ */

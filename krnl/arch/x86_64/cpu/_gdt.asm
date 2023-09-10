@@ -12,14 +12,15 @@
 global _gdt_load
 _gdt_load:
 	lgdt [rdi]
-	mov ax, 0x10 ; data segment -> ax
+	push 0x28
+	lea rax, [rel .relcs]
+	push rax
+	retfq
+.relcs:
+	mov ax, 0x30
 	mov ds, ax
 	mov es, ax
 	mov fs, ax
 	mov gs, ax
 	mov ss, ax
-	pop rdi
-	mov rax, 0x08
-	push rax
-	push rdi
-	retfq
+	ret

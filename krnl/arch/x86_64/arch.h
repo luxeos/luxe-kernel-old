@@ -11,8 +11,6 @@
 #ifndef __ARCH_H_
 #define __ARCH_H_
 
-#include <cpu/gdt.h>
-
 void arch_init();
 
 #endif /* __ARCH_H_ */

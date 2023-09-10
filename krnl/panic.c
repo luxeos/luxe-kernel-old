@@ -8,48 +8,53 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <dd/uart/uart.h>
 #include <cpu/cpu.h>
-#include <panic.h>
+#include <cpu/smp.h>
+
 #include <luxe.h>
 
-__attribute__((noreturn)) void _panic()
-{
-	wizard_show();
-	//_klog("%s", message);
+// clang-format off
+char *g_error_msg[] = {
+	"Out of Physical Memory",
+	"Assertion Failed",
+	"Kernel Stack Corrupted",
+	"Task has corrupted ID",
+	"Unknown"
+};
 
-	_klog("Stack trace:\n");
-	backtrace();
-	_klog("End of trace. System halted.");
+char *g_error_name[] = {
+	"PHYS_MM_OUT_OF_MEMORY",
+	"ASSERT_FAILED",
+	"PANIC_KERNEL_STACK_CORRUPT",
+	"TASK_HAS_CORRUPT_ID",
+	"ERR_UNKNOWN"
+};
+// clang-format on
+
+__attribute__((noreturn)) void __panic(cpu_regs_t regs, int err)
+{
+	_klog_lock();
+
+	cpu_t *cpu = smp_cur_cpu(false);
+	int cpu_num = 1;
+	if (cpu != NULL) {
+		cpu_num += cpu->cpu_id;
+	}
+
+	_klog("\npanic(cpu %d, 0x%8.llx): \"%s\" (%s), registers:\n", cpu_num,
+		  regs.rip, g_error_msg[err], g_error_name[err]);
+
+	cpu_dump_regs(regs);
+	luxeos_print_ver_str();
 
 	for (;;) {
-		__asm__("hlt");
+		__asm__ volatile("cli;hlt");
 	}
 }
 
-void wizard_show()
+void luxeos_print_ver_str(void)
 {
-	_klog("                         /\\\n");
-	_klog("                        /  \\\n");
-	_klog("                       |    |\n");
-	_klog("                     --:'''':--\n");
-	_klog("                       :'_' :\n");
-	_klog("                       _:"
-		  ":\\___\n");
-	_klog("        ' '      ____.' :::     '._\n");
-	_klog("       . *=====<<=)           \\    :\n");
-	_klog("        .  '      '-'-'\\_      /'._.'\n");
-	_klog("                         \\====:_ "
-		  "\n");
-	_klog("                        .'     \\\\\n");
-	_klog("                       :       :\n");
-	_klog("                      /   :    \\\n");
-	_klog("                     :   .      '.\n");
-	_klog("                     :  : :      :\n");
-	_klog("                     :__:-:__.;--'\n");
-	_klog("                     '-'   '-'\n");
-	_klog("    You have been visited by the mighty wizard.\n");
-	_klog(
-		"  A fatal error occured, and the computer cannot function properly anymore.\n");
-	_klog("  Please send the following to the developers:\n\n");
+	_klog("\nLuxeOS version:\n%s\n", g_luxeos_rel_str);
+	_klog("\nKernel version:\n%s (%s/%s)\n", g_kernel_ver_str,
+		  g_kernel_configuration_str, g_kernel_arch_str);
 }

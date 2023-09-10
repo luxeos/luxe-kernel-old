@@ -9,17 +9,26 @@
 #
 #
 
+override MAKEFLAGS += -Rr
+
 include .config
 include Makefile.in
 
+ifeq ($(CONFIG_X86_64),y)
+SMP_FILE := krnl/arch/x86_64/cpu/_smp.s
+ARCH_AS_FILES += $(SMP_FILE)
+OBJ += $(SMP_FILE:%.s=$(BUILD_DIR)/%.o)
+endif
+
 .PHONY: all
-all: full_release
+all: release_iso
+	@utils/printbuildtime.sh $(BUILD_START_TIME)
 
 .PHONY: full_release
 full_release: release_iso release_hdd
 
 .PHONY: release_iso
-release_iso: $(KERNEL) $(SYMFILE)
+release_iso: $(KERNEL)
 	@printf " GEN  $(notdir $(RELEASE_ISO))\n"
 	@mkdir -p $(RELEASE_DIR)
 	@mkdir -p iso_tmp/EFI/BOOT
@@ -29,7 +38,7 @@ release_iso: $(KERNEL) $(SYMFILE)
 	@rm -rf iso_tmp
 
 .PHONY: release_hdd
-release_hdd: $(KERNEL) $(SYMFILE)
+release_hdd: $(KERNEL)
 	@printf " GEN  $(notdir $(RELEASE_HDD))\n"
 	@mkdir -p $(RELEASE_DIR)
 	@dd if=/dev/zero of=$(RELEASE_HDD) bs=1M count=32 &>/dev/null
@@ -41,7 +50,7 @@ release_hdd: $(KERNEL) $(SYMFILE)
 	@mcopy -i $(RELEASE_HDD) $(KERNEL) ::
 
 .PHONY: run
-run: full_release
+run: all
 	@$(QEMU) $(QEMUFLAGS)
 
 .PHONY: format
@@ -75,29 +84,34 @@ $(BUILD_DIR)/%.o: %.asm
 	@printf " AS   $^\n"
 	@$(AS) $(ASFLAGS) $< -o $@
 
-$(SYMFILE): $(OBJ)
-	@printf " GEN  $(notdir $@)\n"
-	@utils/gensym.sh $@
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -x c -c $(SYMFILE) -o $(SYMOBJ)
-	@$(LD) $(LDFLAGS) $(OBJ) $(SYMOBJ) -o $(KERNEL)
-	@utils/gensym.sh $(KERNEL)
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -x c -c $(SYMFILE) -o $(SYMOBJ)
-	@$(LD) $(LDFLAGS) $(OBJ) $(SYMOBJ) -o $(KERNEL)
-
-$(KERNEL): $(OBJ)
+$(BUILD_DIR)/%.o: %.s
 	@mkdir -p $(dir $@)
+	@printf " AS   $^\n"
+	@$(CC) -flto -I. -c $< -o $@
+
+$(KERNEL): $(SMP_TRAMP_BLOB) $(OBJ)
+	@mkdir -p $(dir $@)
+	@mkdir -p $(BUILD_DIR)/krnl/data
 	@printf " LD   $@\n"
 	@$(LD) $(OBJ) $(LDFLAGS) -o $@
+ifeq ($(CONFIG_RELEASE),y)
+	@$(OBJCOPY) --strip-debug $(KERNEL)
+endif
+
+$(SMP_TRAMP_BLOB): $(SMP_TRAMP_FILE)
+ifeq ($(CONFIG_X86_64),y)
+	@mkdir -p $(dir $@)
+	@printf " AS   $^\n"
+	@$(AS) $< -o $@
+endif
 
 .PHONY: clean
 clean:
 	@printf " CLEAN\n"
 	@rm -rf $(BUILD_DIR) $(RELEASE_DIR) .config.old
-	@rm -rf $(SYMFILE)
 
 .PHONY: distclean
 distclean:
 	@printf " DISTCLEAN\n"
 	@rm -rf $(BUILD_DIR) $(RELEASE_DIR)
-	@rm -rf $(SYMFILE)
 	@rm -rf Makefile.in .config .config.old krnl/config.h

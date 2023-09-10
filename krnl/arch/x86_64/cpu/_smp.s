@@ -8,12 +8,9 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#ifndef __MMIO_H_
-#define __MMIO_H_
+.global smp_tramp_start
+.global smp_tramp_end
 
-#include <luxe.h>
-
-void mmio_write(uintptr_t reg, uint32_t val);
-uint32_t mmio_read(uintptr_t reg);
-
-#endif /* __MMIO_H_ */
+smp_tramp_start:
+    .incbin "build/krnl/arch/x86_64/cpu/_trampoline.bin"
+smp_tramp_end:

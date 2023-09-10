@@ -13,6 +13,12 @@
 
 #include <luxe.h>
 
-void pit_tick();
+#define PIT_COUNTER0 0x40
+#define PIT_CMD 0x43
 
-#endif /* __PIT_H_ */
+void pit_init(void);
+void pit_handler(void);
+uint64_t pit_get_ticks(void);
+void pit_wait(uint32_t ms);
+
+#endif /* __PIT_H_*/

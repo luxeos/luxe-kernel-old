@@ -8,8 +8,9 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <debug/sym.h>
-#include <luxe.h>
+#ifndef __EB_H_
+#define __EB_H_
 
-__attribute__((weak))
-const symbol_t _symtab[] = { { .addr = UINTPTR_MAX, "" } };
+void eb_dispatch(void);
+
+#endif /* __EB_H_ */

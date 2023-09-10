@@ -11,11 +11,9 @@
 #ifndef __APIC_H_
 #define __APIC_H_
 
-#include <luxe.h>
+#define IA32_APIC_BASE_MSR 0x1b
 
-void apic_init();
-
-void apic_eoi();
-uint8_t apic_get_irq(uint8_t irq);
+void apic_init(void);
+void apic_eoi(void);
 
 #endif /* __APIC_H_ */

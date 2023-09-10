@@ -16,10 +16,23 @@ menu "CPU"
 		Maximum number of supported CPUs.
 endmenu
 
-menu "Debug"
-	config DEBUG
-		bool "Enable Debug mode"
-		default y
+menu "Scheduling"
+	config TIMESLICE
+		int "Timeslice"
+		default 1000000
 		---help---
-		Enables debugging support.
+		Time frame for every process in nanoseconds.
+		Default translates to 1 millisecond for each process.
 endmenu
+
+choice BUILD_TYPE
+	bool "Build Type"
+	config DEBUG
+		bool "Debug"
+		---help---
+		Stripped debug information, serial logging and verbose mode are disabled by default.
+	config RELEASE
+		bool "Release"
+		---help---
+		Debug information is kept in the kernel binary, serial logging and verbose mode are enabled.
+endchoice

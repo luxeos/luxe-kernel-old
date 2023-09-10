@@ -8,15 +8,19 @@
  * work. If not, see <http://creativecommons.org/licenses/by-nd/4.0/>.
  */
 
-#include <mem/mmio.h>
-#include <luxe.h>
+#ifndef __LUXE_LOCK_H_
+#define __LUXE_LOCK_H_
 
-void mmio_write(uintptr_t reg, uint32_t val)
-{
-	*(volatile uint32_t *)reg = val;
-}
+#include <stdint.h>
 
-uint32_t mmio_read(uintptr_t reg)
-{
-	return *(volatile uint32_t *)reg;
-}
+typedef volatile struct {
+	int lock;
+	uint64_t rflags;
+} lock_t;
+
+#define lock_create() ((lock_t){ 0, 0 })
+
+void lock_acquire(lock_t *lock);
+void lock_release(lock_t *lock);
+
+#endif /* __LUXE_LOCK_H_ */
